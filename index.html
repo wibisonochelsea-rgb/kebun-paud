@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kebun Kecil Ceria</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+      text-align: center;
+      background: #e8f5e9;
+      margin: 0;
+      padding: 20px;
+      user-select: none;
+    }
+    .box {
+      max-width: 420px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+    #stage-icon {
+      font-size: 90px;
+      margin: 20px 0;
+      min-height: 110px;
+      transition: transform 0.3s ease;
+    }
+    .status-text {
+      font-size: 20px;
+      font-weight: bold;
+      color: #2e7d32;
+      min-height: 55px;
+    }
+    .btn-container {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 15px;
+    }
+    button {
+      flex: 1;
+      font-size: 18px;
+      font-weight: bold;
+      padding: 14px 10px;
+      border: none;
+      border-radius: 16px;
+      cursor: pointer;
+      color: white;
+      box-shadow: 0 5px 0 rgba(0,0,0,0.15);
+      transition: 0.1s;
+    }
+    button:active {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 rgba(0,0,0,0.15);
+    }
+    .btn-water { background: #42a5f5; }
+    .btn-sun { background: #ffa726; }
+    .btn-reset {
+      margin-top: 20px;
+      background: #78909c;
+      width: 100%;
+      padding: 10px;
+      font-size: 15px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="box">
+  <h2 style="color: #1b5e20; margin: 0;">🌱 Kebunku</h2>
+  
+  <div id="stage-icon">🟫</div>
+  <div id="status" class="status-text">Biji masih tertanam di tanah. Ayo beri air!</div>
+
+  <div class="btn-container">
+    <button class="btn-water" onclick="beriKebutuhan('air')">💧 Siram Air</button>
+    <button class="btn-sun" onclick="beriKebutuhan('matahari')">☀️ Sinar Surya</button>
+  </div>
+
+  <button class="btn-reset" onclick="resetGame()">🔄 Tanam Biji Baru</button>
+</div>
+
+<script>
+  let stage = 0;
+  const stages = [
+    { icon: "🟫", text: "Biji masih di dalam tanah. Beri air dulu yuk! 💧", need: "air" },
+    { icon: "🌱", text: "Wah, tunas kecil mulai keluar! Butuh sinar matahari hangat ☀️", need: "matahari" },
+    { icon: "🌿", text: "Daunnya makin banyak! Haus lagi, beri minum ya 💧", need: "air" },
+    { icon: "🌼", text: "Keren, bunganya mekar! Hangatkan lagi dengan matahari ☀️", need: "matahari" },
+    { icon: "🍉", text: "Horeee! Buah semangka sudah matang dan manis! 🎉", need: "selesai" }
+  ];
+
+  function beriKebutuhan(jenis) {
+    if (stage >= stages.length - 1) return;
+    
+    if (jenis === stages[stage].need) {
+      stage++;
+      const el = document.getElementById("stage-icon");
+      el.style.transform = "scale(1.2)";
+      setTimeout(() => el.style.transform = "scale(1)", 250);
+      updateDisplay();
+    } else {
+      alert("Ups! Tanaman belum butuh itu. Coba tombol yang satu lagi ya! 😊");
+    }
+  }
+
+  function updateDisplay() {
+    document.getElementById("stage-icon").innerText = stages[stage].icon;
+    document.getElementById("status").innerText = stages[stage].text;
+  }
+
+  function resetGame() {
+    stage = 0;
+    updateDisplay();
+  }
+</script>
+
+</body>
+</html>
