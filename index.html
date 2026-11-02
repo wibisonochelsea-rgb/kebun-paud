@@ -31,21 +31,60 @@ HTML
       position: relative;
       overflow: hidden;
     }
-    .school-header {
-      font-size: 13px;
-      font-weight: bold;
-      color: #2e7d32;
-      background: #e8f5e9;
-      display: inline-block;
-      padding: 4px 12px;
-      border-radius: 12px;
-      margin-bottom: 8px;
-      border: 1px solid #a5d6a7;
+
+    /* --- WATERMARK & LOGO OVAL PAUD NUSANTARA --- */
+    /* Memotong tepat mengikuti bentuk oval bagian dalam */
+    .oval-crop {
+      clip-path: ellipse(48.5% 46.5% at 50% 50%);
+      -webkit-clip-path: ellipse(48.5% 46.5% at 50% 50%);
+      object-fit: cover;
     }
+    .watermark-bg {
+      position: absolute;
+      top: 52%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 270px;
+      height: auto;
+      opacity: 0.08;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .content-layer {
+      position: relative;
+      z-index: 2;
+    }
+    .header-logo-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .logo-badge {
+      width: 76px;
+      height: 56px;
+      background: white;
+      border-radius: 50%;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    }
+    .school-title {
+      font-size: 16px;
+      font-weight: bold;
+      color: #1b5e20;
+      text-align: left;
+      line-height: 1.2;
+    }
+    .school-title span {
+      display: block;
+      font-size: 12px;
+      color: #689f38;
+    }
+
     h2 {
       margin: 0 0 10px 0;
       color: #1b5e20;
-      font-size: 22px;
+      font-size: 21px;
     }
 
     /* --- GAYA PROLOG & KUIS --- */
@@ -61,14 +100,14 @@ HTML
       margin-bottom: 8px;
     }
     .visual-box {
-      font-size: 68px;
+      font-size: 66px;
       margin: 10px 0;
       min-height: 95px;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
-      background: #f1f8e9;
+      background: rgba(241, 248, 233, 0.85);
       border-radius: 20px;
       padding: 14px;
       border: 2px dashed #a5d6a7;
@@ -79,7 +118,7 @@ HTML
       line-height: 1.5;
       min-height: 85px;
       margin-bottom: 14px;
-      background: #fafafa;
+      background: rgba(250, 250, 250, 0.9);
       padding: 12px;
       border-radius: 16px;
       font-weight: bold;
@@ -132,7 +171,7 @@ HTML
     }
     .quiz-feedback {
       min-height: 36px;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: bold;
       margin: 8px 0;
       color: #1b5e20;
@@ -296,159 +335,230 @@ HTML
 <body>
 
 <div class="card" id="game-card">
-  <div class="school-header">🏫 PAUD Nusantara</div>
+  <!-- WATERMARK LOGO OVAL DI TENGAH LATAR -->
+  <img id="wm-logo" src="logo.png" alt="Watermark PAUD Nusantara" class="watermark-bg oval-crop" onerror="gunakanLogoCadangan(this)">
 
-  <!-- ================= 1. LAYAR PROLOG CERITA ================= -->
-  <div id="prolog-screen">
-    <div><span class="badge-pill" id="prolog-step-badge">Cerita 1 dari 3</span></div>
-    <h2 id="prolog-title">Kenalan dengan Tanaman Yuk!</h2>
-    
-    <div id="prolog-visual" class="visual-box">🌱💧☀️</div>
-    
-    <div id="prolog-text" class="narrative-text">
-      Halo teman-teman hebat PAUD Nusantara! Tanaman adalah makhluk hidup ciptaan Tuhan. Supaya tumbuh besar, tanaman butuh minum air dan sinar matahari yang hangat!
+  <div class="content-layer">
+    <!-- HEADER DENGAN LOGO OVAL -->
+    <div class="header-logo-wrap">
+      <img id="header-logo" src="logo.png" alt="Logo PAUD Nusantara" class="logo-badge oval-crop" onerror="gunakanLogoCadangan(this)">
+      <div class="school-title">
+        PAUD NUSANTARA
+        <span>Pendidikan Anak Usia Dini</span>
+      </div>
     </div>
 
-    <button class="btn-voice" onclick="bacakanProlog()">🔊 Dengarkan Suara Ibu Guru</button>
+    <!-- ================= 1. LAYAR PROLOG CERITA ================= -->
+    <div id="prolog-screen">
+      <div><span class="badge-pill" id="prolog-step-badge">Cerita 1 dari 3</span></div>
+      <h2 id="prolog-title">Kenalan dengan Tanaman Yuk!</h2>
+      
+      <div id="prolog-visual" class="visual-box">🌱💧☀️</div>
+      
+      <div id="prolog-text" class="narrative-text">
+        Halo teman-teman hebat PAUD Nusantara! Tanaman adalah makhluk hidup ciptaan Tuhan. Supaya tumbuh besar, tanaman butuh minum air dan sinar matahari yang hangat!
+      </div>
 
-    <div class="nav-row">
-      <button class="btn-skip" onclick="bukaKuis()">Ke Kuis ⏩</button>
-      <button id="btn-next-prolog" class="btn-next" onclick="lanjutProlog()">Lanjut ➡️</button>
-    </div>
-  </div>
+      <button class="btn-voice" onclick="bacakanProlog()">🔊 Dengarkan Suara Ibu Guru</button>
 
-  <!-- ================= 2. LAYAR MINI-KUIS BUAH VS SAYUR ================= -->
-  <div id="quiz-screen">
-    <div><span class="badge-pill" id="quiz-badge">Tebak Gambar 1 dari 3</span></div>
-    <h2>Ini Buah atau Sayuran ya?</h2>
-
-    <div id="quiz-visual" class="visual-box" style="font-size: 82px;">🍉</div>
-    
-    <div id="quiz-question" class="narrative-text" style="min-height: 60px; margin-bottom: 8px;">
-      Lihat gambar Semangka merah ini! Rasanya manis dan segar. Apakah ini Buah atau Sayuran?
-    </div>
-
-    <div id="quiz-feedback" class="quiz-feedback">Pilih salah satu tombol di bawah ya! 👇</div>
-
-    <button class="btn-voice" onclick="bacakanKuis()">🔊 Dengarkan Pertanyaan</button>
-
-    <div class="quiz-options">
-      <button class="btn-quiz-buah" onclick="jawabKuis('buah')">🍎 Ini BUAH</button>
-      <button class="btn-quiz-sayur" onclick="jawabKuis('sayur')">🥦 Ini SAYUR</button>
-    </div>
-  </div>
-
-  <!-- ================= 3. LAYAR GAME MENANAM ================= -->
-  <div id="game-screen">
-    <h2>🌱 Kebun Ceria PAUD Nusantara</h2>
-
-    <div class="plant-selector">
-      <button class="btn-select active" onclick="pilihTanaman('semangka', this)">🍉 Semangka</button>
-      <button class="btn-select" onclick="pilihTanaman('stroberi', this)">🍓 Stroberi</button>
-      <button class="btn-select" onclick="pilihTanaman('jagung', this)">🌽 Jagung</button>
-    </div>
-    
-    <div class="progress-container">
-      <div id="prog-bar" class="progress-bar"></div>
+      <div class="nav-row">
+        <button class="btn-skip" onclick="bukaKuis()">Ke Kuis ⏩</button>
+        <button id="btn-next-prolog" class="btn-next" onclick="lanjutProlog()">Lanjut ➡️</button>
+      </div>
     </div>
 
-    <div class="plant-area">
-      <div id="stage-icon">🟫</div>
-      <div id="hazard-overlay">🐛</div>
+    <!-- ================= 2. LAYAR MINI-KUIS BUAH VS SAYUR ================= -->
+    <div id="quiz-screen">
+      <div><span class="badge-pill" id="quiz-badge">Tebak Gambar 1 dari 3</span></div>
+      <h2>Ini Buah atau Sayuran ya?</h2>
+
+      <div id="quiz-visual" class="visual-box" style="font-size: 82px;">🍉</div>
+      
+      <div id="quiz-question" class="narrative-text" style="min-height: 60px; margin-bottom: 8px;">
+        Lihat gambar Semangka merah ini! Rasanya manis dan segar. Apakah ini Buah atau Sayuran?
+      </div>
+
+      <div id="quiz-feedback" class="quiz-feedback">Pilih salah satu tombol di bawah ya! 👇</div>
+
+      <button class="btn-voice" onclick="bacakanKuis()">🔊 Dengarkan Pertanyaan</button>
+
+      <div class="quiz-options">
+        <button class="btn-quiz-buah" onclick="jawabKuis('buah')">🍎 Ini BUAH</button>
+        <button class="btn-quiz-sayur" onclick="jawabKuis('sayur')">🥦 Ini SAYUR</button>
+      </div>
     </div>
-    
-    <div id="status" class="instruction-text">Biji tertanam di tanah. Beri air dulu yuk! 💧</div>
 
-    <button id="btn-hazard" onclick="selesaikanRintangan()">🌾 Cabut Rumput Liar</button>
+    <!-- ================= 3. LAYAR GAME MENANAM ================= -->
+    <div id="game-screen">
+      <h2>🌱 Kebun Ceria Kita</h2>
 
-    <div class="action-grid">
-      <button id="btn-water" class="btn-water" onclick="beriKebutuhan('air')">💧 Air</button>
-      <button id="btn-sun" class="btn-sun" onclick="beriKebutuhan('matahari')">☀️ Matahari</button>
-    </div>
+      <div class="plant-selector">
+        <button class="btn-select active" onclick="pilihTanaman('semangka', this)">🍉 Semangka</button>
+        <button class="btn-select" onclick="pilihTanaman('stroberi', this)">🍓 Stroberi</button>
+        <button class="btn-select" onclick="pilihTanaman('jagung', this)">🌽 Jagung</button>
+      </div>
+      
+      <div class="progress-container">
+        <div id="prog-bar" class="progress-bar"></div>
+      </div>
 
-    <div class="bottom-links">
-      <button class="btn-back-prolog" onclick="bukaProlog()">📖 Cerita & Kuis</button>
-      <button class="btn-reset" onclick="resetGame()">🔄 Tanam Ulang</button>
+      <div class="plant-area">
+        <div id="stage-icon">🟫</div>
+        <div id="hazard-overlay">🐛</div>
+      </div>
+      
+      <div id="status" class="instruction-text">Biji tertanam di tanah. Beri air dulu yuk! 💧</div>
+
+      <button id="btn-hazard" onclick="selesaikanRintangan()">🌾 Cabut Rumput Liar</button>
+
+      <div class="action-grid">
+        <button id="btn-water" class="btn-water" onclick="beriKebutuhan('air')">💧 Air</button>
+        <button id="btn-sun" class="btn-sun" onclick="beriKebutuhan('matahari')">☀️ Matahari</button>
+      </div>
+
+      <div class="bottom-links">
+        <button class="btn-back-prolog" onclick="bukaProlog()">📖 Cerita & Kuis</button>
+        <button class="btn-reset" onclick="resetGame()">🔄 Tanam Ulang</button>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
-  // ================= DATA PROLOG PAUD NUSANTARA =================
+  // SVG Cadangan Logo Oval PAUD Nusantara (Otomatis muncul jika logo.png belum diupload)
+  const SVG_LOGO_OVAL = "data:image/svg+xml;utf8," + encodeURIComponent(`
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 230">
+      <ellipse cx="160" cy="115" rx="154" ry="108" fill="#ffffff" stroke="#333333" stroke-width="5"/>
+      <!-- Ikon Anak & Atap Biru -->
+      <path d="M75 75 L120 42 L165 75" stroke="#0288d1" stroke-width="8" fill="none" stroke-linecap="round"/>
+      <circle cx="95" cy="52" r="10" fill="#0288d1"/>
+      <path d="M75 88 Q95 68 108 88 L108 115 L85 115 Z" fill="#0288d1"/>
+      <circle cx="145" cy="52" r="10" fill="#0288d1"/>
+      <path d="M132 88 Q145 68 165 88 L155 115 L132 115 Z" fill="#0288d1"/>
+      <circle cx="120" cy="92" r="16" fill="#0d47a1"/>
+      <!-- Tulisan PAUD warna-warni -->
+      <text x="75" y="148" font-family="Impact, sans-serif" font-size="38" fill="#e53935">P</text>
+      <text x="100" y="148" font-family="Impact, sans-serif" font-size="38" fill="#43a047">A</text>
+      <text x="125" y="148" font-family="Impact, sans-serif" font-size="38" fill="#039be5">U</text>
+      <text x="150" y="148" font-family="Impact, sans-serif" font-size="38" fill="#fb8c00">D</text>
+      <text x="65" y="163" font-family="Arial, sans-serif" font-weight="bold" font-size="9" fill="#d32f2f">PENDIDIKAN ANAK USIA DINI</text>
+      <!-- Tulisan nusantara coklat -->
+      <text x="65" y="198" font-family="Trebuchet MS, sans-serif" font-size="40" fill="#795548" letter-spacing="1">nusantara</text>
+      <!-- Kupu-kupu Toska -->
+      <path d="M225 110 C255 60, 295 80, 265 130 C285 150, 260 185, 230 155 Z" fill="#009688" opacity="0.88"/>
+      <path d="M220 115 C195 90, 185 105, 215 135 Z" fill="#26a69a"/>
+    </svg>
+  `);
+
+  function gunakanLogoCadangan(imgEl) {
+    imgEl.onerror = null;
+    imgEl.src = SVG_LOGO_OVAL;
+  }
+
+  // ================= DATA PROLOG (Teks Layar vs Naskah Fonetik Natural) =================
   const DATA_PROLOG = [
     {
       badge: "Cerita 1 dari 3 • Perkenalan",
       title: "Kenalan dengan Tanaman Yuk!",
       visual: "🌱 💧 ☀️",
-      text: "Halo teman-teman hebat PAUD Nusantara! Tanaman adalah makhluk hidup seperti kita. Supaya tidak haus dan bisa tumbuh tinggi, tanaman butuh minum air dan cahaya matahari yang hangat!"
+      text: "Halo teman-teman hebat PAUD Nusantara! Tanaman adalah makhluk hidup seperti kita. Supaya tidak haus dan tumbuh tinggi, tanaman butuh minum air dan cahaya matahari yang hangat!",
+      voiceText: "Halo teman-teman hebat Pa-ud Nusantara! Tanaman adalah makhluk hidup seperti kita. Supaya tidak haus dan bisa tumbuh tinggi, tanaman butuh minum air, dan cahaya matahari yang hangat."
     },
     {
       badge: "Cerita 2 dari 3 • Buah & Sayur",
       title: "Bedanya Buah dan Sayuran",
       visual: "🍉🍓 🆚 🥦🥕",
-      text: "Anak pintar PAUD Nusantara suka makan sehat kan? Ada BUAH seperti Semangka dan Stroberi yang rasanya manis. Ada juga SAYURAN seperti Brokoli dan Wortel yang dimasak Bunda supaya tubuh kita kuat!"
+      text: "Anak pintar PAUD Nusantara suka makan sehat kan? Ada BUAH seperti Semangka dan Stroberi yang rasanya manis. Ada juga SAYURAN seperti Brokoli dan Wortel supaya tubuh kita kuat!",
+      voiceText: "Anak pintar Pa-ud Nusantara suka makan sehat kan? Ada buah, seperti semangka dan stroberi, yang rasanya manis. Ada juga sayuran, seperti brokoli dan wortel, yang dimasak Bunda supaya tubuh kita kuat!"
     },
     {
       badge: "Cerita 3 dari 3 • Siklus Hidup",
       title: "Perjalanan Tumbuh Tanaman",
       visual: "🟫 ➡️ 🌱 ➡️ 🌼 ➡️ 🍉",
-      text: "Bagaimana tanaman tumbuh? Awalnya dari BIJI kecil di dalam tanah. Lalu tumbuh TUNAS dan DAUN hijau. Kemudian mekar BUNGA cantik, hingga menjadi BUAH yang siap kita panen bersama di PAUD Nusantara!"
+      text: "Bagaimana tanaman tumbuh? Awalnya dari BIJI kecil di dalam tanah. Lalu tumbuh TUNAS dan DAUN hijau. Kemudian mekar BUNGA cantik, hingga menjadi BUAH yang siap dipanen bersama!",
+      voiceText: "Bagaimana cara tanaman tumbuh? Awalnya, dari biji kecil di dalam tanah. Lalu tumbuh tunas, dan daun hijau. Kemudian mekar bunga cantik, hingga menjadi buah yang siap kita panen bersama di Pa-ud Nusantara!"
     }
   ];
 
-  // ================= DATA MINI-KUIS BUAH VS SAYUR =================
+  // ================= DATA MINI-KUIS =================
   const DATA_KUIS = [
     {
       badge: "Tebak Gambar 1 dari 3",
       icon: "🍉",
-      nama: "Semangka",
       kategori: "buah",
       tanya: "Teman-teman PAUD Nusantara, lihat gambar Semangka ini! Dagingnya merah, berair, dan manis sekali. Apakah Semangka itu Buah atau Sayuran?",
+      voiceTanya: "Teman-teman Pa-ud Nusantara, lihat gambar semangka ini. Dagingnya merah, berair, dan manis sekali. Apakah semangka itu buah, atau sayuran?",
       benar: "Hebat sekali anak PAUD Nusantara! Semangka adalah BUAH yang manis dan segar!",
-      salah: "Hmm, coba ingat-ingat lagi. Semangka itu rasanya manis dan langsung dimakan tanpa dimasak sayur. Jadi Semangka adalah BUAH ya!"
+      voiceBenar: "Hebat sekali anak Pa-ud Nusantara! Semangka adalah buah yang manis dan segar.",
+      salah: "Hmm, coba ingat lagi. Semangka rasanya manis dan langsung dimakan. Jadi Semangka adalah BUAH ya!",
+      voiceSalah: "Hmm, coba ingat lagi ya. Semangka itu rasanya manis dan segar. Jadi, semangka adalah buah. Yuk pilih tombol buah!"
     },
     {
       badge: "Tebak Gambar 2 dari 3",
       icon: "🥦",
-      nama: "Brokoli Hijau",
       kategori: "sayur",
       tanya: "Sekarang lihat si keriting hijau ini! Namanya Brokoli. Biasanya dimasak sup hangat oleh Bunda. Apakah Brokoli itu Buah atau Sayuran?",
+      voiceTanya: "Sekarang, lihat si keriting hijau ini. Namanya brokoli. Biasanya dimasak sup hangat oleh Bunda. Apakah brokoli itu buah, atau sayuran?",
       benar: "Pintar sekali! Brokoli adalah SAYURAN hijau yang bikin badan anak PAUD Nusantara sehat dan kuat!",
-      salah: "Ups, belum tepat! Brokoli biasanya dimasak menjadi sup sayur yang lezat. Yuk pilih tombol SAYUR!"
+      voiceBenar: "Pintar sekali! Brokoli adalah sayuran hijau, yang bikin badan anak Pa-ud Nusantara sehat dan kuat.",
+      salah: "Ups, belum tepat! Brokoli biasanya dimasak menjadi sup sayur. Yuk pilih tombol SAYUR!",
+      voiceSalah: "Ups, belum tepat. Brokoli biasanya dimasak menjadi sup sayur yang lezat. Yuk, pilih tombol sayur!"
     },
     {
       badge: "Tebak Gambar 3 dari 3",
       icon: "🍓",
-      nama: "Stroberi Merah",
       kategori: "buah",
-      tanya: "Satu lagi ya! Si kecil berwarna merah berbintik ini namanya Stroberi. Rasanya manis segar! Stroberi ini Buah atau Sayuran ya?",
-      benar: "Horeee! Seratus persen pintar! Anak-anak PAUD Nusantara sudah jago membedakan Buah dan Sayur. Yuk sekarang kita mulai menanam!",
-      salah: "Coba perhatikan lagi, Stroberi rasanya manis untuk jus atau camilan buah. Jadi Stroberi itu BUAH ya!"
+      tanya: "Satu lagi ya! Si kecil berwarna merah ini namanya Stroberi. Rasanya manis segar! Stroberi ini Buah atau Sayuran ya?",
+      voiceTanya: "Satu lagi ya! Si kecil berwarna merah ini namanya stroberi. Rasanya manis dan segar. Stroberi ini buah, atau sayuran ya?",
+      benar: "Horeee! Anak-anak PAUD Nusantara sudah jago membedakan Buah dan Sayur. Yuk sekarang kita mulai menanam!",
+      voiceBenar: "Hore! Seratus persen pintar! Anak-anak Pa-ud Nusantara sudah jago membedakan buah dan sayur. Yuk, sekarang kita mulai menanam!",
+      salah: "Stroberi rasanya manis untuk jus atau camilan buah. Jadi Stroberi itu BUAH ya!",
+      voiceSalah: "Coba perhatikan lagi, stroberi rasanya manis untuk camilan buah. Jadi, stroberi itu adalah buah ya!"
     }
   ];
 
   let prologIndex = 0;
   let kuisIndex = 0;
   let sedangTransisiKuis = false;
+  let suaraTerpilih = null;
 
-  // Mesin Suara AI (Web Speech API Bahasa Indonesia)
+  // Pemilih Suara Native Bahasa Indonesia Terbaik di Perangkat
+  function muatSuaraIndonesia() {
+    if (!('speechSynthesis' in window)) return;
+    const daftar = window.speechSynthesis.getVoices();
+    // Prioritaskan suara Natural / Google Bahasa Indonesia / Damayanti / Gadis
+    suaraTerpilih = daftar.find(v => v.lang === 'id-ID' && (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Gadis') || v.name.includes('Damayanti')))
+                 || daftar.find(v => v.lang === 'id-ID' || v.lang === 'id_ID')
+                 || daftar.find(v => v.lang.toLowerCase().startsWith('id'));
+  }
+
+  if ('speechSynthesis' in window) {
+    muatSuaraIndonesia();
+    window.speechSynthesis.onvoiceschanged = muatSuaraIndonesia;
+  }
+
+  // Fungsi Bicara Natural Bahasa Indonesia
   function bicaraAI(teks) {
     if (!('speechSynthesis' in window)) return;
     window.speechSynthesis.cancel();
-    const kalimatBersih = teks.replace(/[^\w\s.,?!-]/gi, '');
-    const ucapan = new SpeechSynthesisUtterance(kalimatBersih);
-    ucapan.lang = 'id-ID';
-    ucapan.rate = 0.92;
-    ucapan.pitch = 1.15;
 
-    const daftarSuara = window.speechSynthesis.getVoices();
-    const suaraIndo = daftarSuara.find(v => v.lang.includes('id') || v.lang.includes('ID'));
-    if (suaraIndo) ucapan.voice = suaraIndo;
+    // Ubah kata PAUD menjadi ejaan fonetik Pa-ud agar tidak dieja P-A-U-D atau logat Inggris
+    let naskahFonetik = teks
+      .replace(/PAUD/g, 'Pa-ud')
+      .replace(/[^\w\s.,?!-]/gi, '');
+
+    const ucapan = new SpeechSynthesisUtterance(naskahFonetik);
+    ucapan.lang = 'id-ID';
+    ucapan.rate = 0.96;  // Kecepatan bicara manusia normal yang jelas
+    ucapan.pitch = 1.0;  // Pitch 1.0 menjaga intonasi tetap natural (tidak cempreng/robotik)
+
+    if (!suaraTerpilih) muatSuaraIndonesia();
+    if (suaraTerpilih) ucapan.voice = suaraTerpilih;
 
     window.speechSynthesis.speak(ucapan);
   }
 
-  // --- FUNGSI NAVIGASI PROLOG ---
+  // --- NAVIGASI PROLOG ---
   function tampilkanProlog() {
     const item = DATA_PROLOG[prologIndex];
     document.getElementById("prolog-step-badge").innerText = item.badge;
@@ -462,7 +572,7 @@ HTML
 
   function bacakanProlog() {
     playTone(520, 0.1);
-    bicaraAI(DATA_PROLOG[prologIndex].text);
+    bicaraAI(DATA_PROLOG[prologIndex].voiceText);
   }
 
   function lanjutProlog() {
@@ -470,7 +580,7 @@ HTML
     if (prologIndex < DATA_PROLOG.length - 1) {
       prologIndex++;
       tampilkanProlog();
-      bicaraAI(DATA_PROLOG[prologIndex].text);
+      bicaraAI(DATA_PROLOG[prologIndex].voiceText);
     } else {
       bukaKuis();
     }
@@ -494,12 +604,12 @@ HTML
     document.getElementById("quiz-question").innerText = soal.tanya;
     document.getElementById("quiz-feedback").innerText = "Pilih salah satu tombol di bawah ya! 👇";
     document.getElementById("quiz-feedback").style.color = "#1b5e20";
-    bicaraAI(soal.tanya);
+    bicaraAI(soal.voiceTanya);
   }
 
   function bacakanKuis() {
     playTone(520, 0.1);
-    bicaraAI(DATA_KUIS[kuisIndex].tanya);
+    bicaraAI(DATA_KUIS[kuisIndex].voiceTanya);
   }
 
   function jawabKuis(pilihan) {
@@ -509,7 +619,6 @@ HTML
     const visualEl = document.getElementById("quiz-visual");
 
     if (pilihan === soal.kategori) {
-      // Jawaban Benar
       sedangTransisiKuis = true;
       playTone(587.33, 0.15);
       setTimeout(() => playTone(880, 0.25), 140);
@@ -520,7 +629,7 @@ HTML
 
       feedbackEl.innerText = "✅ " + soal.benar;
       feedbackEl.style.color = "#2e7d32";
-      bicaraAI(soal.benar);
+      bicaraAI(soal.voiceBenar);
       ledakanBintang();
 
       setTimeout(() => {
@@ -532,13 +641,12 @@ HTML
           sedangTransisiKuis = false;
           mulaiBermain();
         }
-      }, 3600);
+      }, 4200);
     } else {
-      // Jawaban Kurang Tepat
       playTone(240, 0.2, "sawtooth");
       feedbackEl.innerText = "💡 " + soal.salah;
       feedbackEl.style.color = "#d84315";
-      bicaraAI(soal.salah);
+      bicaraAI(soal.voiceSalah);
     }
   }
 
@@ -548,7 +656,7 @@ HTML
     document.getElementById("quiz-screen").style.display = "none";
     document.getElementById("game-screen").style.display = "block";
     resetGame();
-    bicaraAI("Selamat datang di Kebun Ceria PAUD Nusantara! " + stages[0].text);
+    bicaraAI("Selamat datang di Kebun Ceria Pa-ud Nusantara! " + stages[0].text);
   }
 
   function bukaProlog() {
@@ -558,13 +666,13 @@ HTML
     document.getElementById("game-screen").style.display = "none";
     document.getElementById("quiz-screen").style.display = "none";
     document.getElementById("prolog-screen").style.display = "block";
-    bicaraAI(DATA_PROLOG[0].text);
+    bicaraAI(DATA_PROLOG[0].voiceText);
   }
 
   // ================= LOGIKA GAME MENANAM =================
   const DATA_TANAMAN = {
-    semangka: { nama: "Buah Semangka", panenIcon: "🍉", pesanPanen: "Horeee! Buah semangka manis kebun PAUD Nusantara sudah siap dipanen! 🎉" },
-    stroberi: { nama: "Buah Stroberi", panenIcon: "🍓", pesanPanen: "Yaaay! Buah stroberi merah ranum kebun PAUD Nusantara siap dipetik! 🍓✨" },
+    semangka: { nama: "Buah Semangka", panenIcon: "🍉", pesanPanen: "Hore! Buah semangka manis kebun PAUD Nusantara sudah siap dipanen! 🎉" },
+    stroberi: { nama: "Buah Stroberi", panenIcon: "🍓", pesanPanen: "Yay! Buah stroberi merah ranum kebun PAUD Nusantara siap dipetik! 🍓✨" },
     jagung: { nama: "Sayur Jagung", panenIcon: "🌽", pesanPanen: "Wah hebat! Sayur jagung manis kebun PAUD Nusantara tumbuh subur! 🌽🍿" }
   };
 
@@ -639,7 +747,7 @@ HTML
       updateDisplay();
     } else {
       playTone(220, 0.2, "sawtooth");
-      const pesanSalah = "Ups! Tanaman belum butuh itu. Coba tombol yang satunya ya teman-teman PAUD Nusantara!";
+      const pesanSalah = "Ups! Tanaman belum butuh itu. Coba tombol yang satunya ya teman-teman!";
       bicaraAI(pesanSalah);
       alert(pesanSalah + " 😊");
     }
@@ -684,7 +792,7 @@ HTML
 
     rintanganAktif = null;
     document.getElementById("status").innerText = stages[stage].text;
-    bicaraAI("Terima kasih anak hebat! Sekarang " + stages[stage].text);
+    bicaraAI("Terima kasih anak hebat! Sekarang, " + stages[stage].text);
   }
 
   function ledakanBintang() {
@@ -727,10 +835,6 @@ HTML
     playTone(330, 0.18);
     updateDisplay();
   }
-
-  window.speechSynthesis.onvoiceschanged = () => {
-    window.speechSynthesis.getVoices();
-  };
 </script>
 
 </body>
