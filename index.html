@@ -161,6 +161,203 @@
       font-size: 14px;
     }
 
+    /* ================= AVATAR BU GURU ================= */
+    .panggung {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      margin: 8px 0 12px;
+    }
+    .panggung .visual-box {
+      flex: 1;
+      min-width: 0;
+      margin: 0;
+      min-height: 118px;
+      font-size: 42px;
+      line-height: 1.2;
+      flex-wrap: wrap;
+      padding: 8px;
+    }
+    .guru-slot {
+      flex: 0 0 92px;
+      width: 92px;
+    }
+    .guru {
+      display: block;
+      width: 100%;
+      background: none;
+      border: 0;
+      padding: 0;
+      margin: 0;
+      box-shadow: none;
+      border-radius: 0;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: none;
+    }
+    .guru:active {
+      transform: none;
+      box-shadow: none;
+    }
+    .guru svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      overflow: visible;
+    }
+    .guru-nama {
+      display: block;
+      width: max-content;
+      margin: -4px auto 0;
+      padding: 1px 9px;
+      position: relative;
+      font-size: 11px;
+      font-weight: bold;
+      color: #ffffff;
+      background: #7e57c2;
+      border-radius: 10px;
+    }
+
+    /* Mulut: hanya satu bentuk yang tampil */
+    .guru .mulut { display: none; }
+    .guru[data-mulut="senyum"] .m-senyum,
+    .guru[data-mulut="kecil"] .m-kecil,
+    .guru[data-mulut="sedang"] .m-sedang,
+    .guru[data-mulut="besar"] .m-besar { display: inline; }
+
+    /* Mata: berkedip, dan berubah saat senang */
+    .guru .mata-bulat {
+      transform-origin: 60px 54px;
+      animation: kedip 4.2s infinite;
+    }
+    .guru .mata-senang { display: none; }
+    .guru[data-ekspresi="senang"] .mata-bulat { display: none; }
+    .guru[data-ekspresi="senang"] .mata-senang { display: inline; }
+    .guru[data-ekspresi="kaget"] .mata-bulat { animation: none; transform: scale(1.18); }
+    @keyframes kedip {
+      0%, 94%, 100% { transform: scaleY(1); }
+      97% { transform: scaleY(0.1); }
+    }
+    .guru .alis {
+      transition: transform 0.2s ease;
+    }
+    .guru[data-ekspresi="senang"] .alis,
+    .guru[data-ekspresi="kaget"] .alis { transform: translateY(-3px); }
+    .guru[data-ekspresi="bingung"] .alis-kanan { transform: translateY(-4px); }
+
+    /* Tubuh bernapas pelan, kepala mengangguk saat berbicara */
+    .guru .guru-tubuh {
+      transform-origin: 60px 150px;
+      animation: napas 3.2s ease-in-out infinite;
+    }
+    @keyframes napas {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.015, 0.99); }
+    }
+    .guru .guru-kepala {
+      transform-origin: 60px 88px;
+      transition: transform 0.25s ease;
+    }
+    .guru.berbicara .guru-kepala {
+      animation: angguk 0.9s ease-in-out infinite;
+    }
+    @keyframes angguk {
+      0%, 100% { transform: rotate(-2deg) translateY(0); }
+      50% { transform: rotate(2deg) translateY(1.5px); }
+    }
+    .guru[data-ekspresi="bingung"] .guru-kepala {
+      animation: none;
+      transform: rotate(7deg);
+    }
+
+    /* Gestur tangan */
+    .guru .lengan-kanan {
+      transform-origin: 90px 110px;
+      transition: transform 0.3s ease;
+    }
+    .guru .lengan-kiri {
+      transform-origin: 30px 110px;
+      transition: transform 0.3s ease;
+    }
+    .guru[data-gestur="lambai"] .lengan-kanan {
+      animation: lambai 0.42s ease-in-out infinite alternate;
+    }
+    @keyframes lambai {
+      from { transform: rotate(-88deg); }
+      to { transform: rotate(-122deg); }
+    }
+    .guru[data-gestur="tunjuk"] .lengan-kanan {
+      transform: rotate(-115deg);
+    }
+    .guru[data-gestur="hore"] .lengan-kanan {
+      animation: hore-kanan 0.4s ease-in-out infinite alternate;
+    }
+    .guru[data-gestur="hore"] .lengan-kiri {
+      animation: hore-kiri 0.4s ease-in-out infinite alternate;
+    }
+    @keyframes hore-kanan {
+      from { transform: rotate(-90deg); }
+      to { transform: rotate(-122deg); }
+    }
+    @keyframes hore-kiri {
+      from { transform: rotate(90deg); }
+      to { transform: rotate(122deg); }
+    }
+    .guru[data-gestur="hore"] svg {
+      animation: lompat 0.4s ease-in-out infinite alternate;
+    }
+    @keyframes lompat {
+      from { transform: translateY(0); }
+      to { transform: translateY(-6px); }
+    }
+
+    /* Balon ucapan */
+    .balon {
+      position: relative;
+      border: 2px solid #c8e6c9;
+      background: #ffffff;
+    }
+    .balon::before {
+      content: "";
+      position: absolute;
+      top: -9px;
+      left: 38px;
+      width: 14px;
+      height: 14px;
+      background: #ffffff;
+      border-left: 2px solid #c8e6c9;
+      border-top: 2px solid #c8e6c9;
+      transform: rotate(45deg);
+    }
+    .balon-samping {
+      flex: 1;
+      min-width: 0;
+      margin-bottom: 18px;
+      padding: 10px;
+      border-radius: 16px;
+      position: relative;
+      border: 2px solid #c8e6c9;
+      background: #ffffff;
+    }
+    .balon-samping::before {
+      content: "";
+      position: absolute;
+      left: -9px;
+      bottom: 22px;
+      width: 14px;
+      height: 14px;
+      background: #ffffff;
+      border-left: 2px solid #c8e6c9;
+      border-bottom: 2px solid #c8e6c9;
+      transform: rotate(45deg);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .guru .guru-tubuh,
+      .guru.berbicara .guru-kepala,
+      .guru[data-gestur="hore"] svg { animation: none; }
+    }
+
     /* --- LAYAR KUIS --- */
     #quiz-screen {
       display: none;
@@ -203,8 +400,8 @@
     }
     .btn-select {
       flex: 1;
-      padding: 8px 4px;
-      font-size: 14px;
+      padding: 8px 2px;
+      font-size: 13px;
       font-weight: bold;
       border-radius: 14px;
       border: 2px solid #a5d6a7;
@@ -279,12 +476,11 @@
       50% { transform: scale(1.22) translateY(-8px); }
     }
     .instruction-text {
-      font-size: 17px;
+      font-size: 16px;
       font-weight: bold;
       color: #388e3c;
       min-height: 50px;
       line-height: 1.4;
-      margin-bottom: 12px;
     }
     .action-grid {
       display: grid;
@@ -508,13 +704,80 @@
       <div><span class="badge-pill" id="prolog-step-badge">Cerita 1 dari 3</span></div>
       <h2 id="prolog-title">Kenalan dengan Tanaman Yuk!</h2>
 
-      <div id="prolog-visual" class="visual-box">🌱💧☀️</div>
-
-      <div id="prolog-text" class="narrative-text">
-        Halo teman-teman hebat PAUD Nusantara! Tanaman adalah makhluk hidup ciptaan Tuhan. Supaya tumbuh besar, tanaman butuh minum air dan sinar matahari yang hangat!
+      <div class="panggung">
+        <div class="guru-slot" id="slot-prolog">
+          <!-- AVATAR BU GURU: satu avatar yang berpindah antarlayar -->
+          <button type="button" class="guru" id="guru" data-mulut="senyum" data-ekspresi="normal" data-gestur="" onclick="guruDiketuk()" aria-label="Bu Rani, ketuk untuk mendengarkan lagi">
+            <svg viewBox="0 0 120 150" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <g class="guru-tubuh">
+                <!-- Lengan kiri -->
+                <g class="lengan-kiri">
+                  <path d="M30 110 L19 133" stroke="#6a45b0" stroke-width="16" stroke-linecap="round" fill="none"/>
+                  <circle cx="17" cy="139" r="7.5" fill="#f6cfa8"/>
+                </g>
+                <!-- Baju lengan panjang -->
+                <path d="M16 150 C16 116 32 100 60 100 C88 100 104 116 104 150 Z" fill="#7e57c2"/>
+                <!-- Lengan kanan -->
+                <g class="lengan-kanan">
+                  <path d="M90 110 L101 133" stroke="#6a45b0" stroke-width="16" stroke-linecap="round" fill="none"/>
+                  <circle cx="103" cy="139" r="7.5" fill="#f6cfa8"/>
+                </g>
+                <g class="guru-kepala">
+                  <!-- Jilbab: menutup kepala, leher, dan dada -->
+                  <path d="M25 58 C24 90 30 112 44 126 L60 134 L76 126 C90 112 96 90 95 58 Z" fill="#e8799f"/>
+                  <ellipse cx="60" cy="50" rx="36" ry="38" fill="#ec86aa"/>
+                  <path d="M34 82 C44 98 76 98 86 82" fill="none" stroke="#c9587f" stroke-width="2.5" stroke-linecap="round"/>
+                  <path d="M42 100 C50 110 70 110 78 100" fill="none" stroke="#c9587f" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+                  <!-- Wajah -->
+                  <ellipse cx="60" cy="56" rx="24.5" ry="27" fill="#fbdcbc"/>
+                  <!-- Ciput di dahi -->
+                  <path d="M35.5 52 C35 24 85 24 84.5 52 C78 38 42 38 35.5 52 Z" fill="#c9587f"/>
+                  <!-- Pipi -->
+                  <ellipse cx="43.5" cy="65" rx="5.5" ry="3.5" fill="#f7a8a8" opacity="0.75"/>
+                  <ellipse cx="76.5" cy="65" rx="5.5" ry="3.5" fill="#f7a8a8" opacity="0.75"/>
+                  <!-- Alis -->
+                  <g class="alis">
+                    <path d="M44 46 Q50 42.5 55 46" fill="none" stroke="#5d4037" stroke-width="2" stroke-linecap="round"/>
+                  </g>
+                  <g class="alis alis-kanan">
+                    <path d="M65 46 Q70 42.5 76 46" fill="none" stroke="#5d4037" stroke-width="2" stroke-linecap="round"/>
+                  </g>
+                  <!-- Mata -->
+                  <g class="mata-bulat">
+                    <ellipse cx="50" cy="54" rx="3.7" ry="4.7" fill="#3e2723"/>
+                    <ellipse cx="70" cy="54" rx="3.7" ry="4.7" fill="#3e2723"/>
+                    <circle cx="51.3" cy="52.2" r="1.3" fill="#ffffff"/>
+                    <circle cx="71.3" cy="52.2" r="1.3" fill="#ffffff"/>
+                  </g>
+                  <g class="mata-senang">
+                    <path d="M45 56 Q50 49.5 55 56" fill="none" stroke="#3e2723" stroke-width="2.6" stroke-linecap="round"/>
+                    <path d="M65 56 Q70 49.5 75 56" fill="none" stroke="#3e2723" stroke-width="2.6" stroke-linecap="round"/>
+                  </g>
+                  <!-- Hidung -->
+                  <path d="M59 60 Q60.5 63 62 60.5" fill="none" stroke="#d9a077" stroke-width="1.6" stroke-linecap="round"/>
+                  <!-- Mulut -->
+                  <path class="mulut m-senyum" d="M51 69 Q60 77 69 69" fill="none" stroke="#b5475f" stroke-width="2.6" stroke-linecap="round"/>
+                  <ellipse class="mulut m-kecil" cx="60" cy="71" rx="3.6" ry="2.6" fill="#a83a55"/>
+                  <path class="mulut m-sedang" d="M52 68 Q60 66 68 68 Q67 76 60 76 Q53 76 52 68 Z" fill="#a83a55"/>
+                  <g class="mulut m-besar">
+                    <path d="M50 67 Q60 65 70 67 Q69 79 60 79 Q51 79 50 67 Z" fill="#a83a55"/>
+                    <path d="M53 67.5 Q60 66 67 67.5 L66.5 70 Q60 69 53.5 70 Z" fill="#ffffff"/>
+                    <ellipse cx="60" cy="76" rx="5" ry="2.6" fill="#ec7f92"/>
+                  </g>
+                </g>
+              </g>
+            </svg>
+            <span class="guru-nama">Bu Rani</span>
+          </button>
+        </div>
+        <div id="prolog-visual" class="visual-box">🌱💧☀️</div>
       </div>
 
-      <button class="btn-voice" onclick="bacakanProlog()">🔊 Dengarkan Suara Ibu Guru</button>
+      <div id="prolog-text" class="narrative-text balon">
+        Halo anak PAUD Nusantara, jumpa lagi dengan Bu Rani! Hari ini kita akan membahas tentang tumbuhan. Tanaman adalah makhluk hidup ciptaan Tuhan. Supaya tumbuh besar, tanaman butuh minum air dan sinar matahari yang hangat!
+      </div>
+
+      <button class="btn-voice" onclick="bacakanProlog()">🔊 Dengarkan Suara Bu Rani</button>
 
       <div class="nav-row">
         <button class="btn-skip" onclick="bukaKuis()">Ke Kuis ⏩</button>
@@ -527,9 +790,12 @@
       <div><span class="badge-pill" id="quiz-badge">Tebak Gambar 1 dari 3</span></div>
       <h2>Ini Buah atau Sayuran ya?</h2>
 
-      <div id="quiz-visual" class="visual-box" style="font-size: 82px;">🍉</div>
+      <div class="panggung">
+        <div class="guru-slot" id="slot-kuis"></div>
+        <div id="quiz-visual" class="visual-box" style="font-size: 82px;">🍉</div>
+      </div>
 
-      <div id="quiz-question" class="narrative-text" style="min-height: 60px; margin-bottom: 8px;">
+      <div id="quiz-question" class="narrative-text balon" style="min-height: 60px; margin-bottom: 8px;">
         Lihat gambar Semangka merah ini! Rasanya manis dan segar. Apakah ini Buah atau Sayuran?
       </div>
 
@@ -564,7 +830,10 @@
         <div id="fx-layer" class="fx"></div>
       </div>
 
-      <div id="status" class="instruction-text">Biji tertanam di tanah. Beri air dulu yuk! 💧</div>
+      <div class="panggung">
+        <div class="guru-slot" id="slot-game"></div>
+        <div id="status" class="instruction-text balon-samping">Biji tertanam di tanah. Beri air dulu yuk! 💧</div>
+      </div>
 
       <button id="btn-hazard" onclick="selesaikanRintangan()">🌾 Cabut Rumput Liar</button>
 
@@ -618,22 +887,22 @@
       badge: "Cerita 1 dari 3 • Perkenalan",
       title: "Kenalan dengan Tanaman Yuk!",
       visual: "🌱 💧 ☀️",
-      text: "Halo teman-teman hebat PAUD Nusantara! Tanaman adalah makhluk hidup seperti kita. Supaya tidak haus dan tumbuh tinggi, tanaman butuh minum air dan cahaya matahari yang hangat!",
-      voiceText: "Halo teman-teman hebat Pa-ud Nusantara! Tanaman adalah makhluk hidup seperti kita. Supaya tidak haus dan bisa tumbuh tinggi, tanaman butuh minum air, dan cahaya matahari yang hangat."
+      text: "Halo anak PAUD Nusantara, jumpa lagi dengan Bu Rani! Hari ini kita akan membahas tentang tumbuhan. Tanaman adalah makhluk hidup ciptaan Tuhan. Supaya tumbuh besar, tanaman butuh minum air dan sinar matahari yang hangat!",
+      voiceText: "Halo anak Pa-ud Nusantara, jumpa lagi dengan Bu Rani! Hari ini, kita akan membahas tentang tumbuhan! Tahukah kalian? Tanaman adalah makhluk hidup ciptaan Tuhan! Supaya tumbuh besar, tanaman butuh minum air, dan sinar matahari yang hangat!"
     },
     {
       badge: "Cerita 2 dari 3 • Buah & Sayur",
       title: "Bedanya Buah dan Sayuran",
       visual: "🍉🍓 🆚 🥦🥕",
       text: "Anak pintar PAUD Nusantara suka makan sehat kan? Ada BUAH seperti Semangka dan Stroberi yang rasanya manis. Ada juga SAYURAN seperti Brokoli dan Wortel supaya tubuh kita kuat!",
-      voiceText: "Anak pintar Pa-ud Nusantara suka makan sehat kan? Ada buah, seperti semangka dan stroberi, yang rasanya manis. Ada juga sayuran, seperti brokoli dan wortel, yang dimasak Bunda supaya tubuh kita kuat!"
+      voiceText: "Wah, anak pintar Pa-ud Nusantara suka makan sehat, kan? Ada buah, seperti semangka dan stroberi. Hmm, rasanya manis sekali! Ada juga sayuran, seperti brokoli dan wortel, yang dimasak Bunda supaya tubuh kita kuat!"
     },
     {
       badge: "Cerita 3 dari 3 • Siklus Hidup",
       title: "Perjalanan Tumbuh Tanaman",
       visual: "🟫 ➡️ 🌱 ➡️ 🌼 ➡️ 🍉",
       text: "Bagaimana tanaman tumbuh? Awalnya dari BIJI kecil di dalam tanah. Lalu tumbuh TUNAS dan DAUN hijau. Kemudian mekar BUNGA cantik, hingga menjadi BUAH yang siap dipanen bersama!",
-      voiceText: "Bagaimana cara tanaman tumbuh? Awalnya, dari biji kecil di dalam tanah. Lalu tumbuh tunas, dan daun hijau. Kemudian mekar bunga cantik, hingga menjadi buah yang siap kita panen bersama di Pa-ud Nusantara!"
+      voiceText: "Nah, bagaimana cara tanaman tumbuh ya? Awalnya, dari biji kecil di dalam tanah. Lalu tumbuh tunas, dan daun hijau! Kemudian mekar bunga yang cantik, hingga menjadi buah! Asyik, kita panen bersama di Pa-ud Nusantara!"
     }
   ];
 
@@ -644,33 +913,33 @@
       icon: "🍉",
       kategori: "buah",
       tanya: "Teman-teman PAUD Nusantara, lihat gambar Semangka ini! Dagingnya merah, berair, dan manis sekali. Apakah Semangka itu Buah atau Sayuran?",
-      voiceTanya: "Teman-teman Pa-ud Nusantara, lihat gambar semangka ini. Dagingnya merah, berair, dan manis sekali. Apakah semangka itu buah, atau sayuran?",
+      voiceTanya: "Teman-teman Pa-ud Nusantara, ayo lihat gambar semangka ini! Dagingnya merah, berair, dan manis sekali! Nah, apakah semangka itu buah, atau sayuran?",
       benar: "Hebat sekali anak PAUD Nusantara! Semangka adalah BUAH yang manis dan segar!",
-      voiceBenar: "Hebat sekali anak Pa-ud Nusantara! Semangka adalah buah yang manis dan segar.",
+      voiceBenar: "Hore, benar! Hebat sekali anak Pa-ud Nusantara! Semangka adalah buah yang manis dan segar!",
       salah: "Hmm, coba ingat lagi. Semangka rasanya manis dan langsung dimakan. Jadi Semangka adalah BUAH ya!",
-      voiceSalah: "Hmm, coba ingat lagi ya. Semangka itu rasanya manis dan segar. Jadi, semangka adalah buah. Yuk pilih tombol buah!"
+      voiceSalah: "Hmm, hampir benar! Coba ingat lagi ya. Semangka itu rasanya manis dan segar. Jadi, semangka adalah buah. Yuk, pilih tombol buah!"
     },
     {
       badge: "Tebak Gambar 2 dari 3",
       icon: "🥦",
       kategori: "sayur",
       tanya: "Sekarang lihat si keriting hijau ini! Namanya Brokoli. Biasanya dimasak sup hangat oleh Bunda. Apakah Brokoli itu Buah atau Sayuran?",
-      voiceTanya: "Sekarang, lihat si keriting hijau ini. Namanya brokoli. Biasanya dimasak sup hangat oleh Bunda. Apakah brokoli itu buah, atau sayuran?",
+      voiceTanya: "Sekarang, ayo lihat si keriting hijau ini! Namanya brokoli! Biasanya dimasak sup hangat oleh Bunda. Apakah brokoli itu buah, atau sayuran?",
       benar: "Pintar sekali! Brokoli adalah SAYURAN hijau yang bikin badan anak PAUD Nusantara sehat dan kuat!",
-      voiceBenar: "Pintar sekali! Brokoli adalah sayuran hijau, yang bikin badan anak Pa-ud Nusantara sehat dan kuat.",
+      voiceBenar: "Wah, pintar sekali! Brokoli adalah sayuran hijau, yang bikin badan anak Pa-ud Nusantara sehat dan kuat!",
       salah: "Ups, belum tepat! Brokoli biasanya dimasak menjadi sup sayur. Yuk pilih tombol SAYUR!",
-      voiceSalah: "Ups, belum tepat. Brokoli biasanya dimasak menjadi sup sayur yang lezat. Yuk, pilih tombol sayur!"
+      voiceSalah: "Ups, belum tepat. Tidak apa-apa! Brokoli biasanya dimasak menjadi sup sayur yang lezat. Yuk, pilih tombol sayur!"
     },
     {
       badge: "Tebak Gambar 3 dari 3",
       icon: "🍓",
       kategori: "buah",
       tanya: "Satu lagi ya! Si kecil berwarna merah ini namanya Stroberi. Rasanya manis segar! Stroberi ini Buah atau Sayuran ya?",
-      voiceTanya: "Satu lagi ya! Si kecil berwarna merah ini namanya stroberi. Rasanya manis dan segar. Stroberi ini buah, atau sayuran ya?",
+      voiceTanya: "Satu lagi ya! Si kecil berwarna merah ini namanya stroberi! Rasanya manis dan segar! Stroberi ini buah, atau sayuran ya?",
       benar: "Horeee! Anak-anak PAUD Nusantara sudah jago membedakan Buah dan Sayur. Yuk sekarang kita mulai menanam!",
-      voiceBenar: "Hore! Seratus persen pintar! Anak-anak Pa-ud Nusantara sudah jago membedakan buah dan sayur. Yuk, sekarang kita mulai menanam!",
+      voiceBenar: "Hore! Pintar sekali! Anak-anak Pa-ud Nusantara sudah jago membedakan buah dan sayur! Yuk, sekarang kita mulai menanam!",
       salah: "Stroberi rasanya manis untuk jus atau camilan buah. Jadi Stroberi itu BUAH ya!",
-      voiceSalah: "Coba perhatikan lagi, stroberi rasanya manis untuk camilan buah. Jadi, stroberi itu adalah buah ya!"
+      voiceSalah: "Coba perhatikan lagi ya! Stroberi rasanya manis untuk camilan buah. Jadi, stroberi itu adalah buah!"
     }
   ];
 
@@ -679,15 +948,82 @@
   let sedangTransisiKuis = false;
 
   // =====================================================================
+  //  AVATAR BU GURU
+  //  ekspresi: normal | senang | kaget | bingung
+  //  gestur  : lambai | tunjuk | hore | (kosong)
+  // =====================================================================
+  const guruEl = document.getElementById("guru");
+  let timerMulut = null;
+  let timerGestur = null;
+
+  function pindahkanGuru(idSlot) {
+    document.getElementById(idSlot).appendChild(guruEl);
+  }
+
+  function aturEkspresi(nama) {
+    guruEl.dataset.ekspresi = nama || "normal";
+  }
+
+  function aturGestur(nama, durasi) {
+    clearTimeout(timerGestur);
+    guruEl.dataset.gestur = nama || "";
+    if (nama && durasi) {
+      timerGestur = setTimeout(() => { guruEl.dataset.gestur = ""; }, durasi);
+    }
+  }
+
+  function mulutMulai() {
+    if (timerMulut) return;
+    guruEl.classList.add("berbicara");
+    const bentuk = ["kecil", "sedang", "besar", "sedang", "kecil", "senyum"];
+    timerMulut = setInterval(() => {
+      guruEl.dataset.mulut = bentuk[Math.floor(Math.random() * bentuk.length)];
+    }, 115);
+  }
+
+  function mulutBerhenti() {
+    clearInterval(timerMulut);
+    timerMulut = null;
+    guruEl.classList.remove("berbicara");
+    guruEl.dataset.mulut = "senyum";
+  }
+
+  // Ketuk Bu Guru untuk mendengar ucapan terakhir sekali lagi
+  function guruDiketuk() {
+    if (sedangTransisiKuis || sedangAnimasi) {
+      aturGestur("lambai", 1200);
+      return;
+    }
+    playTone(620, 0.1);
+    if (ucapanTerakhir) {
+      bicaraAI(ucapanTerakhir.teks, ucapanTerakhir.opsi);
+    } else {
+      bacakanProlog();
+    }
+  }
+
+  // =====================================================================
   //  SUARA BAHASA INDONESIA
   //  1) Pakai suara Indonesia bawaan perangkat (id-ID) bila ada.
   //  2) Bila tidak ada, pakai suara online Bahasa Indonesia (butuh internet).
   //  Game TIDAK pernah membacakan teks Indonesia dengan suara Inggris.
   // =====================================================================
+
+  // ATUR KECERIAAN SUARA DI SINI
+  // pitch = tinggi nada, rate = kecepatan, jeda = jeda antarkalimat (milidetik).
+  // Jika suara terdengar terlalu melengking, turunkan pitch sedikit demi sedikit.
+  const GAYA_SUARA = {
+    ceria:    { pitch: 1.25, rate: 1.00, jeda: 170 },
+    semangat: { pitch: 1.35, rate: 1.04, jeda: 130 },
+    lembut:   { pitch: 1.15, rate: 0.95, jeda: 220 }
+  };
+
   let suaraTerpilih = null;
   let tokenSuara = 0;
   let audioOnline = null;
   let infoSuaraSudahMuncul = false;
+  let ucapanTerakhir = null;
+  let ucapanAktif = null; // disimpan agar tidak dibersihkan browser sebelum selesai
 
   function skorSuara(v) {
     let skor = 0;
@@ -695,7 +1031,7 @@
     if (/natural|neural/i.test(n)) skor += 10;   // suara paling alami (mis. Microsoft Gadis Online)
     if (/gadis|damayanti|rini|indonesia/i.test(n)) skor += 4; // suara perempuan, cocok sebagai "Ibu Guru"
     if (/google/i.test(n)) skor += 3;
-    if (/ardi/i.test(n)) skor -= 1;
+    if (/ardi/i.test(n)) skor -= 20;             // suara laki-laki, dipakai hanya jika tidak ada pilihan lain
     if (v.localService === false) skor += 1;
     return skor;
   }
@@ -730,6 +1066,8 @@
       try { audioOnline.pause(); } catch (e) {}
       audioOnline = null;
     }
+    ucapanAktif = null;
+    mulutBerhenti();
   }
 
   function siapkanTeks(teks) {
@@ -738,6 +1076,10 @@
       .replace(/[^\p{L}\p{N}\s.,?!'-]/gu, ' ')           // buang emoji dan simbol
       .replace(/\s+/g, ' ')
       .trim();
+  }
+
+  function pecahKalimat(teks) {
+    return (teks.match(/[^.!?]+[.!?]*/g) || [teks]).map(k => k.trim()).filter(Boolean);
   }
 
   function pecahTeks(teks, maks) {
@@ -766,54 +1108,119 @@
     return akhir;
   }
 
+  // Nada dibuat naik-turun per kalimat supaya tidak datar:
+  // seruan dan pertanyaan lebih tinggi, kata singkat seperti "Hore!" paling tinggi.
+  function prosodiKalimat(kalimat, gaya) {
+    let pitch = gaya.pitch;
+    let rate = gaya.rate;
+    if (kalimat.endsWith("!")) { pitch += 0.08; rate += 0.02; }
+    if (kalimat.endsWith("?")) { pitch += 0.10; }
+    if (kalimat.length <= 16) { pitch += 0.07; }
+    return { pitch: Math.min(pitch, 1.6), rate: rate };
+  }
+
+  function ucapkanPerangkat(daftarKalimat, i, t, gaya, selesai) {
+    if (t !== tokenSuara) return;
+    if (i >= daftarKalimat.length) {
+      selesai();
+      return;
+    }
+    const kalimat = daftarKalimat[i];
+    const prosodi = prosodiKalimat(kalimat, gaya);
+    const ucapan = new SpeechSynthesisUtterance(kalimat);
+    ucapan.voice = suaraTerpilih;
+    ucapan.lang = suaraTerpilih.lang || 'id-ID';
+    ucapan.pitch = prosodi.pitch;
+    ucapan.rate = prosodi.rate;
+    ucapanAktif = ucapan;
+
+    let sudahLanjut = false;
+    const lanjut = () => {
+      if (sudahLanjut || t !== tokenSuara) return;
+      sudahLanjut = true;
+      clearTimeout(pengaman);
+      mulutBerhenti();
+      setTimeout(() => ucapkanPerangkat(daftarKalimat, i + 1, t, gaya, selesai), gaya.jeda);
+    };
+    // Pengaman: beberapa browser tidak selalu mengirim sinyal "selesai"
+    const pengaman = setTimeout(lanjut, kalimat.length * 150 + 3000);
+    ucapan.onstart = () => { if (t === tokenSuara && !sudahLanjut) mulutMulai(); };
+    ucapan.onend = lanjut;
+    ucapan.onerror = lanjut;
+    window.speechSynthesis.speak(ucapan);
+  }
+
   // Cadangan: suara Bahasa Indonesia online (butuh internet)
-  function bicaraOnline(naskah) {
+  function bicaraOnline(naskah, selesai) {
     const t = tokenSuara;
     const bagian = pecahTeks(naskah);
     let i = 0;
     const putar = () => {
-      if (t !== tokenSuara || i >= bagian.length) return;
+      if (t !== tokenSuara) return;
+      if (i >= bagian.length) {
+        selesai();
+        return;
+      }
       const url = "https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=id&q=" + encodeURIComponent(bagian[i++]);
       const a = new Audio(url);
       audioOnline = a;
-      a.onended = putar;
-      a.onerror = () => {
-        if (t === tokenSuara) {
-          tampilkanInfoSuara("Suara Bahasa Indonesia belum tersedia. Pasang suara Bahasa Indonesia di Pengaturan > Bahasa > Text-to-speech, atau sambungkan internet.");
-        }
+      // Diputar sedikit lebih cepat dengan nada ikut naik, supaya terdengar lebih ceria
+      a.preservesPitch = false;
+      a.mozPreservesPitch = false;
+      a.webkitPreservesPitch = false;
+      a.playbackRate = 1.12;
+      a.onplaying = () => { if (t === tokenSuara) mulutMulai(); };
+      a.onended = () => {
+        if (t !== tokenSuara) return;
+        mulutBerhenti();
+        putar();
       };
+      const gagal = () => {
+        if (t !== tokenSuara) return;
+        mulutBerhenti();
+        tampilkanInfoSuara("Suara Bahasa Indonesia belum tersedia. Pasang suara Bahasa Indonesia di Pengaturan > Bahasa > Text-to-speech, atau sambungkan internet.");
+        selesai();
+      };
+      a.onerror = gagal;
       const p = a.play();
-      if (p && p.catch) p.catch(() => {});
+      if (p && p.catch) p.catch(gagal);
     };
     putar();
   }
 
-  function bicaraAI(teks) {
+  // opsi: { gaya, ekspresi, gestur, selesai }
+  function bicaraAI(teks, opsi) {
+    opsi = opsi || {};
     hentikanSuara();
     const t = tokenSuara;
     const naskah = siapkanTeks(teks);
     if (!naskah) return;
 
+    ucapanTerakhir = { teks: teks, opsi: opsi };
+    aturEkspresi(opsi.ekspresi || "normal");
+    aturGestur(opsi.gestur || "");
+
+    const selesai = () => {
+      if (t !== tokenSuara) return;
+      mulutBerhenti();
+      aturGestur("");
+      aturEkspresi("normal");
+      if (opsi.selesai) opsi.selesai();
+    };
+
     if ('speechSynthesis' in window) {
       if (!suaraTerpilih) muatSuaraIndonesia();
       if (suaraTerpilih) {
+        const gaya = GAYA_SUARA[opsi.gaya] || GAYA_SUARA.ceria;
         // Jeda singkat setelah cancel() agar Chrome tidak membuang ucapan berikutnya
-        setTimeout(() => {
-          if (t !== tokenSuara) return;
-          const ucapan = new SpeechSynthesisUtterance(naskah);
-          ucapan.voice = suaraTerpilih;
-          ucapan.lang = suaraTerpilih.lang || 'id-ID';
-          ucapan.rate = 0.96;
-          ucapan.pitch = 1.0;
-          window.speechSynthesis.speak(ucapan);
-        }, 60);
+        setTimeout(() => ucapkanPerangkat(pecahKalimat(naskah), 0, t, gaya, selesai), 60);
         return;
       }
     }
 
     // Tidak ada suara Indonesia di perangkat -> pakai suara online
     tampilkanInfoSuara("Suara Bahasa Indonesia belum terpasang di perangkat ini, jadi game memakai suara online (butuh internet). Untuk hasil terbaik, pasang suara Bahasa Indonesia di Pengaturan > Bahasa > Text-to-speech.");
-    bicaraOnline(naskah);
+    bicaraOnline(naskah, selesai);
   }
 
   // --- NAVIGASI PROLOG ---
@@ -828,9 +1235,15 @@
     btnNext.innerText = (prologIndex === DATA_PROLOG.length - 1) ? "Lanjut ke Kuis! 🧩" : "Lanjut ➡️";
   }
 
+  function opsiProlog() {
+    return prologIndex === 0
+      ? { gaya: "ceria", ekspresi: "senang", gestur: "lambai" }
+      : { gaya: "ceria", ekspresi: "normal", gestur: "tunjuk" };
+  }
+
   function bacakanProlog() {
     playTone(520, 0.1);
-    bicaraAI(DATA_PROLOG[prologIndex].voiceText);
+    bicaraAI(DATA_PROLOG[prologIndex].voiceText, opsiProlog());
   }
 
   function lanjutProlog() {
@@ -838,7 +1251,7 @@
     if (prologIndex < DATA_PROLOG.length - 1) {
       prologIndex++;
       tampilkanProlog();
-      bicaraAI(DATA_PROLOG[prologIndex].voiceText);
+      bicaraAI(DATA_PROLOG[prologIndex].voiceText, opsiProlog());
     } else {
       bukaKuis();
     }
@@ -853,7 +1266,12 @@
     document.getElementById("prolog-screen").style.display = "none";
     document.getElementById("game-screen").style.display = "none";
     document.getElementById("quiz-screen").style.display = "block";
+    pindahkanGuru("slot-kuis");
     tampilkanSoalKuis();
+  }
+
+  function opsiSoal() {
+    return { gaya: "ceria", ekspresi: "normal", gestur: "tunjuk" };
   }
 
   function tampilkanSoalKuis() {
@@ -863,12 +1281,13 @@
     document.getElementById("quiz-question").innerText = soal.tanya;
     document.getElementById("quiz-feedback").innerText = "Pilih salah satu tombol di bawah ya! 👇";
     document.getElementById("quiz-feedback").style.color = "#1b5e20";
-    bicaraAI(soal.voiceTanya);
+    bicaraAI(soal.voiceTanya, opsiSoal());
   }
 
   function bacakanKuis() {
+    if (sedangTransisiKuis) return;
     playTone(520, 0.1);
-    bicaraAI(DATA_KUIS[kuisIndex].voiceTanya);
+    bicaraAI(DATA_KUIS[kuisIndex].voiceTanya, opsiSoal());
   }
 
   function jawabKuis(pilihan) {
@@ -888,10 +1307,13 @@
 
       feedbackEl.innerText = "✅ " + soal.benar;
       feedbackEl.style.color = "#2e7d32";
-      bicaraAI(soal.voiceBenar);
       ledakanBintang();
 
-      setTimeout(() => {
+      // Lanjut setelah Bu Guru selesai berbicara, supaya pujiannya tidak terpotong
+      let sudahLanjut = false;
+      const lanjutSoal = () => {
+        if (sudahLanjut) return;
+        sudahLanjut = true;
         if (kuisIndex < DATA_KUIS.length - 1) {
           kuisIndex++;
           sedangTransisiKuis = false;
@@ -900,12 +1322,19 @@
           sedangTransisiKuis = false;
           mulaiBermain();
         }
-      }, 4200);
+      };
+      bicaraAI(soal.voiceBenar, {
+        gaya: "semangat",
+        ekspresi: "senang",
+        gestur: "hore",
+        selesai: () => setTimeout(lanjutSoal, 700)
+      });
+      setTimeout(lanjutSoal, 15000);
     } else {
       playTone(240, 0.2, "sawtooth");
       feedbackEl.innerText = "💡 " + soal.salah;
       feedbackEl.style.color = "#d84315";
-      bicaraAI(soal.voiceSalah);
+      bicaraAI(soal.voiceSalah, { gaya: "lembut", ekspresi: "bingung", gestur: "tunjuk" });
     }
   }
 
@@ -914,8 +1343,9 @@
     document.getElementById("prolog-screen").style.display = "none";
     document.getElementById("quiz-screen").style.display = "none";
     document.getElementById("game-screen").style.display = "block";
+    pindahkanGuru("slot-game");
     resetGame();
-    bicaraAI("Selamat datang di Kebun Ceria PAUD Nusantara! " + stages[0].text);
+    bicaraAI("Selamat datang di Kebun Ceria PAUD Nusantara! " + stages[0].text, { gaya: "semangat", ekspresi: "senang", gestur: "lambai" });
   }
 
   function bukaProlog() {
@@ -926,7 +1356,8 @@
     document.getElementById("game-screen").style.display = "none";
     document.getElementById("quiz-screen").style.display = "none";
     document.getElementById("prolog-screen").style.display = "block";
-    bicaraAI(DATA_PROLOG[0].voiceText);
+    pindahkanGuru("slot-prolog");
+    bicaraAI(DATA_PROLOG[0].voiceText, opsiProlog());
   }
 
   // ================= LOGIKA GAME MENANAM =================
@@ -1389,7 +1820,7 @@
     btn.classList.add('active');
     stages = buatTahapan(key);
     resetGame();
-    bicaraAI(stages[0].text);
+    bicaraAI(stages[0].text, { gaya: "ceria", ekspresi: "senang", gestur: "tunjuk" });
   }
 
   async function beriKebutuhan(jenis) {
@@ -1398,8 +1829,9 @@
     if (jenis !== stages[stage].need) {
       playTone(220, 0.2, "sawtooth");
       const pesanSalah = "Ups! Tanaman belum butuh itu. Coba tombol yang satunya ya teman-teman!";
-      bicaraAI(pesanSalah);
-      alert(pesanSalah + " 😊");
+      document.getElementById("status").innerText = pesanSalah + " 😊";
+      // Bu Guru yang memberi tahu, lalu petunjuk tahap ini muncul kembali
+      bicaraAI(pesanSalah, { gaya: "lembut", ekspresi: "bingung", gestur: "tunjuk", selesai: updateDisplay });
       return;
     }
 
@@ -1407,6 +1839,9 @@
     hentikanSuara();
     sedangAnimasi = true;
     kunciTombol(true);
+    updateDisplay();
+    aturEkspresi("senang");
+    aturGestur("tunjuk");
 
     if (jenis === "air") await animasiAir(t);
     else await animasiMatahari(t);
@@ -1425,7 +1860,10 @@
       pasangRintangan(stages[stage].hazard);
     } else {
       kunciTombol(false);
-      bicaraAI(stages[stage].text);
+      const panen = stage === stages.length - 1;
+      bicaraAI(stages[stage].text, panen
+        ? { gaya: "semangat", ekspresi: "senang", gestur: "hore" }
+        : { gaya: "ceria", ekspresi: "senang", gestur: "tunjuk" });
     }
 
     if (stage === stages.length - 1) {
@@ -1445,6 +1883,7 @@
     document.getElementById("btn-water").disabled = true;
     document.getElementById("btn-sun").disabled = true;
     btnHazard.disabled = false;
+    const opsiKaget = { gaya: "semangat", ekspresi: "kaget", gestur: "tunjuk" };
 
     if (jenis === "rumput") {
       overlay.innerText = "🌾";
@@ -1453,7 +1892,7 @@
       btnHazard.style.display = "block";
       const teksRumput = "Ada rumput liar mengganggu! Anak pintar PAUD Nusantara, cabut rumputnya dulu yuk!";
       document.getElementById("status").innerText = teksRumput;
-      bicaraAI(teksRumput);
+      bicaraAI(teksRumput, opsiKaget);
     } else if (jenis === "ulat") {
       overlay.innerText = "🐛";
       overlay.style.display = "block";
@@ -1461,7 +1900,7 @@
       btnHazard.style.display = "block";
       const teksUlat = "Awas ada ulat pemakan daun! Ayo kita usir ulatnya dulu yuk!";
       document.getElementById("status").innerText = teksUlat;
-      bicaraAI(teksUlat);
+      bicaraAI(teksUlat, opsiKaget);
     }
     playTone(280, 0.25, "sawtooth");
   }
@@ -1473,6 +1912,8 @@
     hentikanSuara();
     sedangAnimasi = true;
     kunciTombol(true);
+    aturEkspresi("senang");
+    aturGestur("tunjuk");
 
     if (jenis === "rumput") await animasiCabutRumput(t);
     else await animasiSemprot(t);
@@ -1489,7 +1930,7 @@
 
     rintanganAktif = null;
     document.getElementById("status").innerText = stages[stage].text;
-    bicaraAI("Terima kasih anak hebat! Sekarang, " + stages[stage].text);
+    bicaraAI("Terima kasih, anak hebat! " + stages[stage].text, { gaya: "ceria", ekspresi: "senang", gestur: "hore" });
   }
 
   function ledakanBintang() {
@@ -1524,6 +1965,9 @@
 
   function resetGame() {
     batalkanAnimasi();
+    hentikanSuara();
+    aturEkspresi("normal");
+    aturGestur("");
     stage = 0;
     rintanganAktif = null;
     document.getElementById("hazard-overlay").style.display = "none";
@@ -1532,6 +1976,11 @@
     playTone(330, 0.18);
     updateDisplay();
   }
+
+  // Bu Guru melambaikan tangan saat game pertama dibuka
+  aturEkspresi("senang");
+  aturGestur("lambai", 2600);
+  setTimeout(() => { if (!ucapanTerakhir) aturEkspresi("normal"); }, 2600);
 </script>
 
 </body>
