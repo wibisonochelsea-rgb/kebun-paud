@@ -1,4 +1,3 @@
-HTML
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -33,7 +32,6 @@ HTML
     }
 
     /* --- WATERMARK & LOGO OVAL PAUD NUSANTARA --- */
-    /* Memotong tepat mengikuti bentuk oval bagian dalam */
     .oval-crop {
       clip-path: ellipse(48.5% 46.5% at 50% 50%);
       -webkit-clip-path: ellipse(48.5% 46.5% at 50% 50%);
@@ -69,16 +67,32 @@ HTML
       box-shadow: 0 2px 8px rgba(0,0,0,0.12);
     }
     .school-title {
-      font-size: 16px;
+      font-size: 18px;
       font-weight: bold;
       color: #1b5e20;
       text-align: left;
       line-height: 1.2;
     }
-    .school-title span {
-      display: block;
+
+    /* --- INFO SUARA (muncul hanya jika suara Indonesia belum terpasang) --- */
+    .info-suara {
+      display: none;
+      text-align: left;
       font-size: 12px;
-      color: #689f38;
+      line-height: 1.4;
+      color: #6d4c00;
+      background: #fff8e1;
+      border: 2px solid #ffe082;
+      border-radius: 14px;
+      padding: 8px 10px;
+      margin-bottom: 10px;
+    }
+    .info-suara .tutup {
+      float: right;
+      margin-left: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      color: #a1887f;
     }
 
     h2 {
@@ -219,23 +233,36 @@ HTML
       background: #66bb6a;
       transition: width 0.35s ease;
     }
+    /* Area tanaman dibuat lebih tinggi supaya ada ruang untuk gembor, tangan, semprotan, dan matahari */
     .plant-area {
-      min-height: 130px;
+      min-height: 230px;
+      padding-top: 60px;
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
       margin: 8px 0;
+      background: linear-gradient(to bottom, rgba(225,245,254,0.55), rgba(241,248,233,0) 70%);
+      border-radius: 20px;
     }
     #stage-icon {
       font-size: 92px;
-      transition: transform 0.25s ease;
+      position: relative;
+      z-index: 1;
+      transition: transform 0.25s ease, filter 0.4s ease;
+    }
+    #stage-icon.wet {
+      filter: drop-shadow(0 0 14px #4fc3f7) saturate(1.25);
+    }
+    #stage-icon.sunlit {
+      filter: drop-shadow(0 0 22px #ffd54f) brightness(1.12);
     }
     #hazard-overlay {
       position: absolute;
       right: 25%;
       bottom: 10px;
       font-size: 45px;
+      z-index: 2;
       filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
       animation: wriggle 0.6s infinite alternate ease-in-out;
       display: none;
@@ -286,7 +313,7 @@ HTML
     }
     .btn-water { background: #42a5f5; box-shadow: 0 5px 0 #1e88e5; }
     .btn-sun { background: #ffa726; box-shadow: 0 5px 0 #f57c00; }
-    
+
     #btn-hazard {
       display: none;
       width: 100%;
@@ -330,6 +357,131 @@ HTML
       0% { opacity: 1; transform: translate(0, 0) scale(0.5); }
       100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(1.4) rotate(var(--rot)); }
     }
+
+    /* ================= LAPISAN ANIMASI (gembor, matahari, tangan, semprotan) ================= */
+    .fx {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
+      z-index: 5;
+    }
+    .fx svg { display: block; width: 100%; height: auto; }
+
+    /* Gembor */
+    .fx-can {
+      position: absolute;
+      width: 130px;
+      left: calc(50% + 4px);
+      top: 0;
+      transform-origin: 80px 70px;
+      opacity: 0;
+    }
+    .drop {
+      position: absolute;
+      width: 7px;
+      height: 11px;
+      margin: -5px 0 0 -3px;
+      background: linear-gradient(#b3e5fc, #29b6f6);
+      border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%;
+    }
+    .splash {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      margin: -3px 0 0 -3px;
+      border-radius: 50%;
+      background: #b3e5fc;
+    }
+
+    /* Matahari */
+    .fx-sun {
+      position: absolute;
+      top: 2px;
+      left: calc(50% - 34px);
+      width: 68px;
+      height: 68px;
+      font-size: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+    }
+    .fx-sun span {
+      display: block;
+      animation: spin 5s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .fx-beam {
+      position: absolute;
+      top: 50px;
+      left: calc(50% - 115px);
+      width: 230px;
+      height: 150px;
+      transform-origin: 50% 0;
+      background: linear-gradient(to bottom, rgba(255,235,59,0.8), rgba(255,235,59,0));
+      clip-path: polygon(38% 0, 62% 0, 100% 100%, 0 100%);
+      -webkit-clip-path: polygon(38% 0, 62% 0, 100% 100%, 0 100%);
+      opacity: 0;
+    }
+    .sparkle {
+      position: absolute;
+      font-size: 18px;
+      margin: -9px 0 0 -9px;
+    }
+
+    /* Tangan pencabut rumput */
+    .fx-hand {
+      position: absolute;
+      width: 60px;
+      height: 90px;
+      opacity: 0;
+    }
+    .fx-hand svg { height: 100%; }
+    .fx-hand .fingers {
+      transform-origin: 30px 48px;
+      transition: transform 0.25s ease;
+    }
+    .fx-hand.grip .fingers {
+      transform: scale(0.82, 0.62);
+    }
+    .dirt {
+      position: absolute;
+      width: 7px;
+      height: 7px;
+      margin: -3px 0 0 -3px;
+      border-radius: 50%;
+      background: #8d6e63;
+    }
+
+    /* Botol semprot */
+    .fx-bottle {
+      position: absolute;
+      width: 92px;
+      right: 0;
+      top: 55px;
+      transform-origin: 50% 80%;
+      opacity: 0;
+    }
+    .fx-bottle .trigger {
+      transform-origin: 68px 40px;
+      transition: transform 0.12s ease;
+    }
+    .fx-bottle.squeeze .trigger {
+      transform: rotate(-20deg);
+    }
+    .mist {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      margin: -7px 0 0 -7px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.95), rgba(144,202,249,0.55) 60%, rgba(144,202,249,0));
+    }
+    .dizzy {
+      position: absolute;
+      font-size: 22px;
+      margin: -11px 0 0 -11px;
+    }
   </style>
 </head>
 <body>
@@ -342,19 +494,22 @@ HTML
     <!-- HEADER DENGAN LOGO OVAL -->
     <div class="header-logo-wrap">
       <img id="header-logo" src="logo.png" alt="Logo PAUD Nusantara" class="logo-badge oval-crop" onerror="gunakanLogoCadangan(this)">
-      <div class="school-title">
-        PAUD NUSANTARA
-        <span>Pendidikan Anak Usia Dini</span>
-      </div>
+      <div class="school-title">PAUD NUSANTARA</div>
+    </div>
+
+    <!-- INFO SUARA: hanya tampil jika suara Bahasa Indonesia belum tersedia di perangkat -->
+    <div id="info-suara" class="info-suara">
+      <span class="tutup" onclick="document.getElementById('info-suara').style.display='none'">✕</span>
+      <span id="info-suara-teks"></span>
     </div>
 
     <!-- ================= 1. LAYAR PROLOG CERITA ================= -->
     <div id="prolog-screen">
       <div><span class="badge-pill" id="prolog-step-badge">Cerita 1 dari 3</span></div>
       <h2 id="prolog-title">Kenalan dengan Tanaman Yuk!</h2>
-      
+
       <div id="prolog-visual" class="visual-box">🌱💧☀️</div>
-      
+
       <div id="prolog-text" class="narrative-text">
         Halo teman-teman hebat PAUD Nusantara! Tanaman adalah makhluk hidup ciptaan Tuhan. Supaya tumbuh besar, tanaman butuh minum air dan sinar matahari yang hangat!
       </div>
@@ -373,7 +528,7 @@ HTML
       <h2>Ini Buah atau Sayuran ya?</h2>
 
       <div id="quiz-visual" class="visual-box" style="font-size: 82px;">🍉</div>
-      
+
       <div id="quiz-question" class="narrative-text" style="min-height: 60px; margin-bottom: 8px;">
         Lihat gambar Semangka merah ini! Rasanya manis dan segar. Apakah ini Buah atau Sayuran?
       </div>
@@ -397,16 +552,18 @@ HTML
         <button class="btn-select" onclick="pilihTanaman('stroberi', this)">🍓 Stroberi</button>
         <button class="btn-select" onclick="pilihTanaman('jagung', this)">🌽 Jagung</button>
       </div>
-      
+
       <div class="progress-container">
         <div id="prog-bar" class="progress-bar"></div>
       </div>
 
-      <div class="plant-area">
+      <div class="plant-area" id="plant-area">
         <div id="stage-icon">🟫</div>
         <div id="hazard-overlay">🐛</div>
+        <!-- Lapisan untuk semua animasi (gembor, matahari, tangan, semprotan) -->
+        <div id="fx-layer" class="fx"></div>
       </div>
-      
+
       <div id="status" class="instruction-text">Biji tertanam di tanah. Beri air dulu yuk! 💧</div>
 
       <button id="btn-hazard" onclick="selesaikanRintangan()">🌾 Cabut Rumput Liar</button>
@@ -455,7 +612,7 @@ HTML
     imgEl.src = SVG_LOGO_OVAL;
   }
 
-  // ================= DATA PROLOG (Teks Layar vs Naskah Fonetik Natural) =================
+  // ================= DATA PROLOG (Teks Layar vs Naskah Suara) =================
   const DATA_PROLOG = [
     {
       badge: "Cerita 1 dari 3 • Perkenalan",
@@ -520,42 +677,143 @@ HTML
   let prologIndex = 0;
   let kuisIndex = 0;
   let sedangTransisiKuis = false;
-  let suaraTerpilih = null;
 
-  // Pemilih Suara Native Bahasa Indonesia Terbaik di Perangkat
+  // =====================================================================
+  //  SUARA BAHASA INDONESIA
+  //  1) Pakai suara Indonesia bawaan perangkat (id-ID) bila ada.
+  //  2) Bila tidak ada, pakai suara online Bahasa Indonesia (butuh internet).
+  //  Game TIDAK pernah membacakan teks Indonesia dengan suara Inggris.
+  // =====================================================================
+  let suaraTerpilih = null;
+  let tokenSuara = 0;
+  let audioOnline = null;
+  let infoSuaraSudahMuncul = false;
+
+  function skorSuara(v) {
+    let skor = 0;
+    const n = v.name || "";
+    if (/natural|neural/i.test(n)) skor += 10;   // suara paling alami (mis. Microsoft Gadis Online)
+    if (/gadis|damayanti|rini|indonesia/i.test(n)) skor += 4; // suara perempuan, cocok sebagai "Ibu Guru"
+    if (/google/i.test(n)) skor += 3;
+    if (/ardi/i.test(n)) skor -= 1;
+    if (v.localService === false) skor += 1;
+    return skor;
+  }
+
   function muatSuaraIndonesia() {
     if (!('speechSynthesis' in window)) return;
-    const daftar = window.speechSynthesis.getVoices();
-    // Prioritaskan suara Natural / Google Bahasa Indonesia / Damayanti / Gadis
-    suaraTerpilih = daftar.find(v => v.lang === 'id-ID' && (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Gadis') || v.name.includes('Damayanti')))
-                 || daftar.find(v => v.lang === 'id-ID' || v.lang === 'id_ID')
-                 || daftar.find(v => v.lang.toLowerCase().startsWith('id'));
+    const daftar = window.speechSynthesis.getVoices() || [];
+    // Cocokkan id-ID, id_ID, atau "id" (Android kadang memakai id_ID)
+    const suaraId = daftar.filter(v => /^id([-_]|$)/i.test(v.lang || "") || /indonesia/i.test(v.name || ""));
+    suaraId.sort((a, b) => skorSuara(b) - skorSuara(a));
+    suaraTerpilih = suaraId[0] || null;
   }
 
   if ('speechSynthesis' in window) {
     muatSuaraIndonesia();
     window.speechSynthesis.onvoiceschanged = muatSuaraIndonesia;
+    // Chrome kadang terlambat memuat daftar suara, coba lagi beberapa kali
+    [300, 800, 1600].forEach(ms => setTimeout(() => { if (!suaraTerpilih) muatSuaraIndonesia(); }, ms));
   }
 
-  // Fungsi Bicara Natural Bahasa Indonesia
+  function tampilkanInfoSuara(pesan) {
+    if (infoSuaraSudahMuncul) return;
+    infoSuaraSudahMuncul = true;
+    document.getElementById("info-suara-teks").innerText = pesan;
+    document.getElementById("info-suara").style.display = "block";
+  }
+
+  function hentikanSuara() {
+    tokenSuara++;
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    if (audioOnline) {
+      try { audioOnline.pause(); } catch (e) {}
+      audioOnline = null;
+    }
+  }
+
+  function siapkanTeks(teks) {
+    return teks
+      .replace(/PAUD/g, 'Pa-ud')                         // dibaca "pa-ud", bukan P-A-U-D
+      .replace(/[^\p{L}\p{N}\s.,?!'-]/gu, ' ')           // buang emoji dan simbol
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  function pecahTeks(teks, maks) {
+    maks = maks || 170;
+    const kalimat = teks.match(/[^.!?]+[.!?]*/g) || [teks];
+    const hasil = [];
+    let buf = "";
+    kalimat.forEach(k => {
+      k = k.trim();
+      if (!k) return;
+      const gabung = (buf + " " + k).trim();
+      if (gabung.length <= maks) {
+        buf = gabung;
+      } else {
+        if (buf) hasil.push(buf);
+        buf = k;
+      }
+    });
+    if (buf) hasil.push(buf);
+    const akhir = [];
+    hasil.forEach(h => {
+      if (h.length <= maks) { akhir.push(h); return; }
+      const potong = h.match(new RegExp('.{1,' + maks + '}(\\s|$)', 'g')) || [h];
+      potong.forEach(p => akhir.push(p.trim()));
+    });
+    return akhir;
+  }
+
+  // Cadangan: suara Bahasa Indonesia online (butuh internet)
+  function bicaraOnline(naskah) {
+    const t = tokenSuara;
+    const bagian = pecahTeks(naskah);
+    let i = 0;
+    const putar = () => {
+      if (t !== tokenSuara || i >= bagian.length) return;
+      const url = "https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=id&q=" + encodeURIComponent(bagian[i++]);
+      const a = new Audio(url);
+      audioOnline = a;
+      a.onended = putar;
+      a.onerror = () => {
+        if (t === tokenSuara) {
+          tampilkanInfoSuara("Suara Bahasa Indonesia belum tersedia. Pasang suara Bahasa Indonesia di Pengaturan > Bahasa > Text-to-speech, atau sambungkan internet.");
+        }
+      };
+      const p = a.play();
+      if (p && p.catch) p.catch(() => {});
+    };
+    putar();
+  }
+
   function bicaraAI(teks) {
-    if (!('speechSynthesis' in window)) return;
-    window.speechSynthesis.cancel();
+    hentikanSuara();
+    const t = tokenSuara;
+    const naskah = siapkanTeks(teks);
+    if (!naskah) return;
 
-    // Ubah kata PAUD menjadi ejaan fonetik Pa-ud agar tidak dieja P-A-U-D atau logat Inggris
-    let naskahFonetik = teks
-      .replace(/PAUD/g, 'Pa-ud')
-      .replace(/[^\w\s.,?!-]/gi, '');
+    if ('speechSynthesis' in window) {
+      if (!suaraTerpilih) muatSuaraIndonesia();
+      if (suaraTerpilih) {
+        // Jeda singkat setelah cancel() agar Chrome tidak membuang ucapan berikutnya
+        setTimeout(() => {
+          if (t !== tokenSuara) return;
+          const ucapan = new SpeechSynthesisUtterance(naskah);
+          ucapan.voice = suaraTerpilih;
+          ucapan.lang = suaraTerpilih.lang || 'id-ID';
+          ucapan.rate = 0.96;
+          ucapan.pitch = 1.0;
+          window.speechSynthesis.speak(ucapan);
+        }, 60);
+        return;
+      }
+    }
 
-    const ucapan = new SpeechSynthesisUtterance(naskahFonetik);
-    ucapan.lang = 'id-ID';
-    ucapan.rate = 0.96;  // Kecepatan bicara manusia normal yang jelas
-    ucapan.pitch = 1.0;  // Pitch 1.0 menjaga intonasi tetap natural (tidak cempreng/robotik)
-
-    if (!suaraTerpilih) muatSuaraIndonesia();
-    if (suaraTerpilih) ucapan.voice = suaraTerpilih;
-
-    window.speechSynthesis.speak(ucapan);
+    // Tidak ada suara Indonesia di perangkat -> pakai suara online
+    tampilkanInfoSuara("Suara Bahasa Indonesia belum terpasang di perangkat ini, jadi game memakai suara online (butuh internet). Untuk hasil terbaik, pasang suara Bahasa Indonesia di Pengaturan > Bahasa > Text-to-speech.");
+    bicaraOnline(naskah);
   }
 
   // --- NAVIGASI PROLOG ---
@@ -588,7 +846,8 @@ HTML
 
   // --- FUNGSI MINI-KUIS ---
   function bukaKuis() {
-    window.speechSynthesis.cancel();
+    hentikanSuara();
+    batalkanAnimasi();
     kuisIndex = 0;
     sedangTransisiKuis = false;
     document.getElementById("prolog-screen").style.display = "none";
@@ -651,16 +910,17 @@ HTML
   }
 
   function mulaiBermain() {
-    window.speechSynthesis.cancel();
+    hentikanSuara();
     document.getElementById("prolog-screen").style.display = "none";
     document.getElementById("quiz-screen").style.display = "none";
     document.getElementById("game-screen").style.display = "block";
     resetGame();
-    bicaraAI("Selamat datang di Kebun Ceria Pa-ud Nusantara! " + stages[0].text);
+    bicaraAI("Selamat datang di Kebun Ceria PAUD Nusantara! " + stages[0].text);
   }
 
   function bukaProlog() {
-    window.speechSynthesis.cancel();
+    hentikanSuara();
+    batalkanAnimasi();
     prologIndex = 0;
     tampilkanProlog();
     document.getElementById("game-screen").style.display = "none";
@@ -679,6 +939,8 @@ HTML
   let tanamanDipilih = "semangka";
   let stage = 0;
   let rintanganAktif = null;
+  let sedangAnimasi = false;
+  let tokenGame = 0; // naik setiap reset/pindah layar supaya animasi lama berhenti
 
   function buatTahapan(key) {
     const data = DATA_TANAMAN[key];
@@ -693,23 +955,434 @@ HTML
 
   let stages = buatTahapan(tanamanDipilih);
 
+  // ================= EFEK SUARA (dibuat dengan WebAudio, tanpa file audio) =================
   const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  function playTone(freq, duration, type = "triangle") {
+
+  function playTone(freq, duration, type = "triangle", vol = 0.12) {
     try {
       if (audioCtx.state === 'suspended') audioCtx.resume();
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
       osc.type = type;
       osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-      gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+      gain.gain.setValueAtTime(vol, audioCtx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
       osc.connect(gain);
       gain.connect(audioCtx.destination);
       osc.start();
       osc.stop(audioCtx.currentTime + duration);
-    } catch(e) {}
+    } catch (e) {}
   }
 
+  // Suara "desis" (noise) untuk air, tarikan rumput, dan semprotan
+  function playNoise(opt) {
+    try {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const dur = opt.dur || 0.3;
+      const t0 = audioCtx.currentTime + (opt.delay || 0);
+      const len = Math.max(1, Math.floor(audioCtx.sampleRate * dur));
+      const buf = audioCtx.createBuffer(1, len, audioCtx.sampleRate);
+      const data = buf.getChannelData(0);
+      for (let i = 0; i < len; i++) data[i] = Math.random() * 2 - 1;
+
+      const src = audioCtx.createBufferSource();
+      src.buffer = buf;
+      const filt = audioCtx.createBiquadFilter();
+      filt.type = opt.type || 'bandpass';
+      filt.frequency.setValueAtTime(opt.freq || 1500, t0);
+      filt.Q.value = opt.q || 1;
+      if (opt.sweepTo) filt.frequency.exponentialRampToValueAtTime(opt.sweepTo, t0 + dur);
+
+      const gain = audioCtx.createGain();
+      const atk = opt.attack || 0.02;
+      gain.gain.setValueAtTime(0.0001, t0);
+      gain.gain.exponentialRampToValueAtTime(opt.vol || 0.15, t0 + atk);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+
+      src.connect(filt);
+      filt.connect(gain);
+      gain.connect(audioCtx.destination);
+      src.start(t0);
+      src.stop(t0 + dur);
+    } catch (e) {}
+  }
+
+  function suaraAir() {
+    playNoise({ dur: 1.7, type: 'bandpass', freq: 2600, q: 0.8, vol: 0.12, attack: 0.15 });
+    for (let i = 0; i < 9; i++) {
+      setTimeout(() => playTone(600 + Math.random() * 500, 0.07, 'sine', 0.06), i * 170 + Math.random() * 60);
+    }
+  }
+  function suaraMatahari() {
+    [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => setTimeout(() => playTone(f, 0.35, 'sine', 0.1), i * 180));
+  }
+  function suaraGenggam() {
+    playNoise({ dur: 0.12, type: 'highpass', freq: 2000, vol: 0.12 });
+  }
+  function suaraTarik() {
+    playNoise({ dur: 0.18, type: 'bandpass', freq: 1100, q: 1.2, vol: 0.18 });
+    playNoise({ dur: 0.18, type: 'bandpass', freq: 1300, q: 1.2, vol: 0.18, delay: 0.22 });
+  }
+  function suaraCabut() {
+    playNoise({ dur: 0.45, type: 'bandpass', freq: 700, q: 0.9, vol: 0.25, sweepTo: 2600 });
+    setTimeout(() => playTone(200, 0.09, 'sine', 0.2), 380);
+  }
+  function suaraSemprot() {
+    playTone(1200, 0.03, 'square', 0.05);
+    playNoise({ dur: 0.5, type: 'highpass', freq: 3500, vol: 0.2, attack: 0.03 });
+  }
+
+  // ================= ANIMASI =================
+  const SVG_GEMBOR = `
+    <svg viewBox="0 0 130 100" xmlns="http://www.w3.org/2000/svg">
+      <path d="M44 36 Q65 4 86 36" fill="none" stroke="#1e88e5" stroke-width="6" stroke-linecap="round"/>
+      <path d="M94 46 Q124 44 118 72 Q112 88 92 80" fill="none" stroke="#1e88e5" stroke-width="6" stroke-linecap="round"/>
+      <line x1="38" y1="62" x2="10" y2="28" stroke="#1e88e5" stroke-width="10" stroke-linecap="round"/>
+      <rect x="36" y="34" width="58" height="54" rx="12" fill="#42a5f5" stroke="#1e88e5" stroke-width="3"/>
+      <ellipse cx="50" cy="50" rx="5" ry="10" fill="#ffffff" opacity="0.35"/>
+      <circle cx="60" cy="58" r="3.2" fill="#0d47a1"/>
+      <circle cx="76" cy="58" r="3.2" fill="#0d47a1"/>
+      <path d="M60 68 Q68 76 76 68" fill="none" stroke="#0d47a1" stroke-width="3" stroke-linecap="round"/>
+      <ellipse class="rose" cx="8" cy="24" rx="10" ry="6" transform="rotate(-50 8 24)" fill="#1565c0"/>
+    </svg>`;
+
+  const SVG_TANGAN = `
+    <svg viewBox="0 0 60 90" xmlns="http://www.w3.org/2000/svg">
+      <rect x="14" y="0" width="32" height="26" rx="7" fill="#42a5f5"/>
+      <rect x="20" y="22" width="20" height="14" rx="5" fill="#ffcc9c"/>
+      <rect x="9" y="32" width="42" height="24" rx="12" fill="#ffcc9c" stroke="#e8a96e" stroke-width="1.5"/>
+      <g class="fingers">
+        <rect x="10" y="48" width="9" height="30" rx="4.5" fill="#ffcc9c" stroke="#e8a96e" stroke-width="1.5"/>
+        <rect x="20" y="48" width="9" height="32" rx="4.5" fill="#ffcc9c" stroke="#e8a96e" stroke-width="1.5"/>
+        <rect x="30" y="48" width="9" height="31" rx="4.5" fill="#ffcc9c" stroke="#e8a96e" stroke-width="1.5"/>
+        <rect x="40" y="48" width="9" height="28" rx="4.5" fill="#ffcc9c" stroke="#e8a96e" stroke-width="1.5"/>
+      </g>
+      <ellipse cx="9" cy="46" rx="5" ry="10" transform="rotate(25 9 46)" fill="#ffcc9c" stroke="#e8a96e" stroke-width="1.5"/>
+    </svg>`;
+
+  const SVG_BOTOL = `
+    <svg viewBox="0 0 100 110" xmlns="http://www.w3.org/2000/svg">
+      <rect x="30" y="50" width="46" height="56" rx="12" fill="#66bb6a" stroke="#388e3c" stroke-width="3"/>
+      <rect x="35" y="74" width="36" height="26" rx="8" fill="#a5d6a7" opacity="0.7"/>
+      <circle cx="46" cy="64" r="3" fill="#1b5e20"/>
+      <circle cx="62" cy="64" r="3" fill="#1b5e20"/>
+      <path d="M46 74 Q54 82 62 74" fill="none" stroke="#1b5e20" stroke-width="3" stroke-linecap="round"/>
+      <rect x="42" y="38" width="22" height="14" fill="#388e3c"/>
+      <rect x="26" y="22" width="54" height="18" rx="7" fill="#2e7d32"/>
+      <rect class="nozzle" x="8" y="26" width="22" height="10" rx="4" fill="#1b5e20"/>
+      <rect class="trigger" x="64" y="38" width="9" height="22" rx="4" fill="#c8e6c9" stroke="#81c784" stroke-width="1.5"/>
+    </svg>`;
+
+  const tunggu = ms => new Promise(r => setTimeout(r, ms));
+  const getFx = () => document.getElementById("fx-layer");
+
+  function buat(cls, html) {
+    const el = document.createElement("div");
+    el.className = cls;
+    if (html !== undefined) el.innerHTML = html;
+    getFx().appendChild(el);
+    return el;
+  }
+
+  // Menjalankan animasi dan menunggu sampai selesai
+  function jalankan(el, frames, opts) {
+    return new Promise(res => {
+      const a = el.animate(frames, Object.assign({ fill: "forwards" }, opts));
+      a.onfinish = res;
+      a.oncancel = res;
+    });
+  }
+
+  // Posisi elemen relatif terhadap lapisan animasi
+  function posisi(el) {
+    const f = getFx().getBoundingClientRect();
+    const r = el.getBoundingClientRect();
+    return {
+      x: r.left - f.left, y: r.top - f.top, w: r.width, h: r.height,
+      cx: r.left - f.left + r.width / 2, cy: r.top - f.top + r.height / 2,
+      bottom: r.bottom - f.top
+    };
+  }
+
+  function bersihkanFx() {
+    getFx().innerHTML = "";
+    const ov = document.getElementById("hazard-overlay");
+    if (ov.getAnimations) {
+      ov.getAnimations().filter(a => !a.animationName).forEach(a => a.cancel());
+    }
+    ov.style.animation = "";
+    document.getElementById("stage-icon").classList.remove("wet", "sunlit");
+  }
+
+  function batalkanAnimasi() {
+    tokenGame++;
+    sedangAnimasi = false;
+    bersihkanFx();
+  }
+
+  function kunciTombol(kunci) {
+    document.getElementById("btn-water").disabled = kunci;
+    document.getElementById("btn-sun").disabled = kunci;
+    document.getElementById("btn-hazard").disabled = kunci;
+  }
+
+  // --- Animasi AIR: gembor miring, air dituang, percikan di tanah ---
+  function percikan(x, y) {
+    for (let i = 0; i < 4; i++) {
+      const s = buat("splash");
+      s.style.left = x + "px";
+      s.style.top = y + "px";
+      const dx = (Math.random() - 0.5) * 34;
+      const a = s.animate([
+        { transform: "translate(0,0)", opacity: 1 },
+        { transform: `translate(${dx * 0.6}px,-${8 + Math.random() * 10}px)`, opacity: 1, offset: 0.5 },
+        { transform: `translate(${dx}px,2px)`, opacity: 0 }
+      ], { duration: 380 });
+      a.onfinish = () => s.remove();
+    }
+  }
+
+  function tetes(x, y, tanahY) {
+    const d = buat("drop");
+    d.style.left = x + "px";
+    d.style.top = y + "px";
+    const dx = (Math.random() - 0.5) * 16;
+    const jarak = Math.max(10, tanahY - y);
+    const a = d.animate([
+      { transform: "translate(0,0)", opacity: 1 },
+      { transform: `translate(${dx}px,${jarak}px)`, opacity: 1 }
+    ], { duration: 420 + Math.random() * 100, easing: "cubic-bezier(.5,0,1,.6)" });
+    a.onfinish = () => { d.remove(); percikan(x + dx, tanahY); };
+  }
+
+  async function animasiAir(t) {
+    const batal = () => t !== tokenGame;
+    const icon = document.getElementById("stage-icon");
+    const gembor = buat("fx-can", SVG_GEMBOR);
+    const mawar = gembor.querySelector(".rose");
+
+    await jalankan(gembor,
+      [{ transform: "translate(90px,-30px) rotate(0deg)", opacity: 0 }, { transform: "translate(0,0) rotate(0deg)", opacity: 1 }],
+      { duration: 500, easing: "ease-out" });
+    if (batal()) return;
+
+    await jalankan(gembor,
+      [{ transform: "translate(0,0) rotate(0deg)", opacity: 1 }, { transform: "translate(0,0) rotate(-35deg)", opacity: 1 }],
+      { duration: 350, easing: "ease-in-out" });
+    if (batal()) return;
+
+    // Gembor bergoyang pelan saat menuang
+    jalankan(gembor,
+      [{ transform: "translate(0,0) rotate(-35deg)" }, { transform: "translate(0,0) rotate(-40deg)" }, { transform: "translate(0,0) rotate(-35deg)" }],
+      { duration: 1500 });
+
+    suaraAir();
+    icon.classList.add("wet");
+    const tanahY = posisi(icon).bottom - 14;
+    const mulai = Date.now();
+    while (Date.now() - mulai < 1500) {
+      if (batal()) return;
+      const m = posisi(mawar);
+      for (let i = 0; i < 2; i++) tetes(m.cx + (Math.random() - 0.5) * 10, m.cy + 4, tanahY);
+      await tunggu(70);
+    }
+    await tunggu(350);
+    if (batal()) return;
+
+    await jalankan(gembor,
+      [{ transform: "translate(0,0) rotate(-35deg)", opacity: 1 }, { transform: "translate(90px,-30px) rotate(0deg)", opacity: 0 }],
+      { duration: 500, easing: "ease-in" });
+    gembor.remove();
+    await tunggu(250);
+    icon.classList.remove("wet");
+  }
+
+  // --- Animasi MATAHARI: matahari turun, cahaya menyinari tanaman ---
+  function kilau(x, y) {
+    const k = buat("sparkle", "✨");
+    k.style.left = x + "px";
+    k.style.top = y + "px";
+    const a = k.animate([
+      { transform: "translateY(0) scale(0.4)", opacity: 0 },
+      { transform: "translateY(-14px) scale(1.2)", opacity: 1, offset: 0.4 },
+      { transform: "translateY(-36px) scale(0.8)", opacity: 0 }
+    ], { duration: 900 });
+    a.onfinish = () => k.remove();
+  }
+
+  async function animasiMatahari(t) {
+    const batal = () => t !== tokenGame;
+    const icon = document.getElementById("stage-icon");
+    const beam = buat("fx-beam");
+    const sun = buat("fx-sun", "<span>☀️</span>");
+
+    suaraMatahari();
+    await jalankan(sun,
+      [{ transform: "translateY(-60px) scale(0.5)", opacity: 0 }, { transform: "translateY(0) scale(1)", opacity: 1 }],
+      { duration: 550, easing: "ease-out" });
+    if (batal()) return;
+
+    icon.classList.add("sunlit");
+    jalankan(beam,
+      [{ transform: "scaleY(0)", opacity: 0 }, { transform: "scaleY(1)", opacity: 1 }],
+      { duration: 450, easing: "ease-out" });
+
+    const p = posisi(icon);
+    for (let i = 0; i < 10; i++) {
+      if (batal()) return;
+      kilau(p.cx + (Math.random() - 0.5) * 90, p.cy + (Math.random() - 0.2) * 50);
+      await tunggu(130);
+    }
+    if (batal()) return;
+
+    await Promise.all([
+      jalankan(beam, [{ opacity: 1 }, { opacity: 0 }], { duration: 400 }),
+      jalankan(sun,
+        [{ transform: "translateY(0) scale(1)", opacity: 1 }, { transform: "translateY(-60px) scale(0.5)", opacity: 0 }],
+        { duration: 450 })
+    ]);
+    beam.remove();
+    sun.remove();
+    icon.classList.remove("sunlit");
+  }
+
+  // --- Animasi CABUT RUMPUT: tangan datang, menggenggam, menarik rumput ---
+  function tanahBeterbangan(x, y) {
+    for (let i = 0; i < 9; i++) {
+      const d = buat("dirt");
+      d.style.left = x + "px";
+      d.style.top = y + "px";
+      const dx = (Math.random() - 0.5) * 70;
+      const naik = 14 + Math.random() * 28;
+      const a = d.animate([
+        { transform: "translate(0,0)", opacity: 1 },
+        { transform: `translate(${dx * 0.6}px,-${naik}px)`, opacity: 1, offset: 0.5 },
+        { transform: `translate(${dx}px,${10 + Math.random() * 10}px)`, opacity: 0 }
+      ], { duration: 650 });
+      a.onfinish = () => d.remove();
+    }
+  }
+
+  async function animasiCabutRumput(t) {
+    const batal = () => t !== tokenGame;
+    const ov = document.getElementById("hazard-overlay");
+    ov.style.animation = "none";
+    const g = posisi(ov);
+
+    const tangan = buat("fx-hand", SVG_TANGAN);
+    tangan.style.left = (g.cx - 30) + "px";
+    tangan.style.top = (g.cy - 72) + "px";
+
+    await jalankan(tangan,
+      [{ transform: "translateY(-90px)", opacity: 0 }, { transform: "translateY(0)", opacity: 1 }],
+      { duration: 550, easing: "ease-out" });
+    if (batal()) return;
+
+    // Menggenggam rumput
+    tangan.classList.add("grip");
+    suaraGenggam();
+    await tunggu(280);
+    if (batal()) return;
+
+    // Menarik-narik (krek, krek)
+    suaraTarik();
+    await Promise.all([
+      jalankan(tangan,
+        [{ transform: "translateY(0)" }, { transform: "translateY(-10px)" }, { transform: "translateY(0)" }, { transform: "translateY(-10px)" }, { transform: "translateY(0)" }],
+        { duration: 460 }),
+      jalankan(ov,
+        [{ transform: "translateY(0) rotate(0deg)" }, { transform: "translateY(-10px) rotate(-8deg)" }, { transform: "translateY(0) rotate(5deg)" }, { transform: "translateY(-10px) rotate(-8deg)" }, { transform: "translateY(0) rotate(0deg)" }],
+        { duration: 460 })
+    ]);
+    if (batal()) return;
+
+    // Cabut! rumput terangkat bersama tangan
+    suaraCabut();
+    tanahBeterbangan(g.cx, g.bottom - 6);
+    await Promise.all([
+      jalankan(tangan,
+        [{ transform: "translateY(0)", opacity: 1 }, { transform: "translateY(-110px)", opacity: 1, offset: 0.7 }, { transform: "translateY(-150px)", opacity: 0 }],
+        { duration: 750, easing: "ease-in" }),
+      jalankan(ov,
+        [{ transform: "translateY(0) rotate(0deg)", opacity: 1 }, { transform: "translateY(-110px) rotate(12deg)", opacity: 1, offset: 0.7 }, { transform: "translateY(-150px) rotate(18deg)", opacity: 0 }],
+        { duration: 750, easing: "ease-in" })
+    ]);
+    tangan.remove();
+  }
+
+  // --- Animasi SEMPROT ULAT: botol semprot, kabut, ulat jatuh ---
+  function kabut(x1, y1, x2, y2) {
+    const m = buat("mist");
+    m.style.left = x1 + "px";
+    m.style.top = y1 + "px";
+    const dx = (x2 - x1) + (Math.random() - 0.5) * 40;
+    const dy = (y2 - y1) + (Math.random() - 0.5) * 30;
+    const a = m.animate([
+      { transform: "translate(0,0) scale(0.4)", opacity: 0.95 },
+      { transform: `translate(${dx * 0.6}px,${dy * 0.6}px) scale(1.6)`, opacity: 0.8, offset: 0.6 },
+      { transform: `translate(${dx}px,${dy}px) scale(2.4)`, opacity: 0 }
+    ], { duration: 520 + Math.random() * 180, easing: "ease-out" });
+    a.onfinish = () => m.remove();
+  }
+
+  async function animasiSemprot(t) {
+    const batal = () => t !== tokenGame;
+    const ov = document.getElementById("hazard-overlay");
+    ov.style.animation = "none";
+    const target = posisi(ov);
+
+    const botol = buat("fx-bottle", SVG_BOTOL);
+    const nozzle = botol.querySelector(".nozzle");
+
+    await jalankan(botol,
+      [{ transform: "translate(80px,-20px) rotate(0deg)", opacity: 0 }, { transform: "translate(0,0) rotate(-8deg)", opacity: 1 }],
+      { duration: 450, easing: "ease-out" });
+    if (batal()) return;
+
+    for (let ronde = 0; ronde < 2; ronde++) {
+      botol.classList.add("squeeze");
+      suaraSemprot();
+      if (ronde === 1) {
+        // Ulat kaget dan bergoyang
+        jalankan(ov,
+          [{ transform: "translateX(0) rotate(0deg)" }, { transform: "translateX(-6px) rotate(-14deg)" }, { transform: "translateX(6px) rotate(14deg)" }, { transform: "translateX(-6px) rotate(-14deg)" }, { transform: "translateX(0) rotate(0deg)" }],
+          { duration: 500 });
+      }
+      for (let i = 0; i < 14; i++) {
+        if (batal()) return;
+        const n = posisi(nozzle);
+        kabut(n.cx, n.cy, target.cx, target.cy);
+        await tunggu(30);
+      }
+      await tunggu(120);
+      botol.classList.remove("squeeze");
+      await tunggu(180);
+      if (batal()) return;
+    }
+
+    // Ulat pusing lalu jatuh pergi
+    for (let i = 0; i < 3; i++) {
+      const z = buat("dizzy", "💫");
+      z.style.left = (target.cx + (i - 1) * 18) + "px";
+      z.style.top = (target.y - 4) + "px";
+      const a = z.animate([
+        { transform: "translateY(0) scale(0.6)", opacity: 1 },
+        { transform: "translateY(-18px) scale(1.1)", opacity: 0 }
+      ], { duration: 700, delay: i * 90 });
+      a.onfinish = () => z.remove();
+    }
+    await Promise.all([
+      jalankan(ov,
+        [{ transform: "translateY(0) rotate(0deg)", opacity: 1 }, { transform: "translateY(30px) rotate(160deg)", opacity: 0 }],
+        { duration: 650, easing: "ease-in" }),
+      jalankan(botol,
+        [{ transform: "translate(0,0) rotate(-8deg)", opacity: 1 }, { transform: "translate(80px,-20px) rotate(0deg)", opacity: 0 }],
+        { duration: 550, easing: "ease-in", delay: 150 })
+    ]);
+    botol.remove();
+  }
+
+  // ================= ALUR GAME =================
   function pilihTanaman(key, btn) {
     tanamanDipilih = key;
     document.querySelectorAll('.btn-select').forEach(b => b.classList.remove('active'));
@@ -719,38 +1392,50 @@ HTML
     bicaraAI(stages[0].text);
   }
 
-  function beriKebutuhan(jenis) {
-    if (stage >= stages.length - 1 || rintanganAktif) return;
+  async function beriKebutuhan(jenis) {
+    if (stage >= stages.length - 1 || rintanganAktif || sedangAnimasi) return;
 
-    if (jenis === stages[stage].need) {
-      stage++;
-      playTone(450 + (stage * 85), 0.22);
-      
-      const iconEl = document.getElementById("stage-icon");
-      iconEl.classList.remove("bounce");
-      void iconEl.offsetWidth;
-      iconEl.classList.add("bounce");
-
-      if (stages[stage].hazard) {
-        pasangRintangan(stages[stage].hazard);
-      } else {
-        bicaraAI(stages[stage].text);
-      }
-
-      if (stage === stages.length - 1) {
-        setTimeout(() => playTone(523.25, 0.15), 50);
-        setTimeout(() => playTone(659.25, 0.15), 200);
-        setTimeout(() => playTone(783.99, 0.2), 350);
-        setTimeout(() => playTone(1046.50, 0.4), 500);
-        ledakanBintang();
-      }
-      updateDisplay();
-    } else {
+    if (jenis !== stages[stage].need) {
       playTone(220, 0.2, "sawtooth");
       const pesanSalah = "Ups! Tanaman belum butuh itu. Coba tombol yang satunya ya teman-teman!";
       bicaraAI(pesanSalah);
       alert(pesanSalah + " 😊");
+      return;
     }
+
+    const t = tokenGame;
+    hentikanSuara();
+    sedangAnimasi = true;
+    kunciTombol(true);
+
+    if (jenis === "air") await animasiAir(t);
+    else await animasiMatahari(t);
+    if (t !== tokenGame) return;
+
+    sedangAnimasi = false;
+    stage++;
+    playTone(450 + (stage * 85), 0.22);
+
+    const iconEl = document.getElementById("stage-icon");
+    iconEl.classList.remove("bounce");
+    void iconEl.offsetWidth;
+    iconEl.classList.add("bounce");
+
+    if (stages[stage].hazard) {
+      pasangRintangan(stages[stage].hazard);
+    } else {
+      kunciTombol(false);
+      bicaraAI(stages[stage].text);
+    }
+
+    if (stage === stages.length - 1) {
+      setTimeout(() => playTone(523.25, 0.15), 50);
+      setTimeout(() => playTone(659.25, 0.15), 200);
+      setTimeout(() => playTone(783.99, 0.2), 350);
+      setTimeout(() => playTone(1046.50, 0.4), 500);
+      ledakanBintang();
+    }
+    updateDisplay();
   }
 
   function pasangRintangan(jenis) {
@@ -759,6 +1444,7 @@ HTML
     const overlay = document.getElementById("hazard-overlay");
     document.getElementById("btn-water").disabled = true;
     document.getElementById("btn-sun").disabled = true;
+    btnHazard.disabled = false;
 
     if (jenis === "rumput") {
       overlay.innerText = "🌾";
@@ -780,15 +1466,26 @@ HTML
     playTone(280, 0.25, "sawtooth");
   }
 
-  function selesaikanRintangan() {
-    if (!rintanganAktif) return;
+  async function selesaikanRintangan() {
+    if (!rintanganAktif || sedangAnimasi) return;
+    const t = tokenGame;
+    const jenis = rintanganAktif;
+    hentikanSuara();
+    sedangAnimasi = true;
+    kunciTombol(true);
+
+    if (jenis === "rumput") await animasiCabutRumput(t);
+    else await animasiSemprot(t);
+    if (t !== tokenGame) return;
+
+    sedangAnimasi = false;
     playTone(600, 0.15);
     setTimeout(() => playTone(800, 0.2), 120);
 
     document.getElementById("hazard-overlay").style.display = "none";
     document.getElementById("btn-hazard").style.display = "none";
-    document.getElementById("btn-water").disabled = false;
-    document.getElementById("btn-sun").disabled = false;
+    bersihkanFx();
+    kunciTombol(false);
 
     rintanganAktif = null;
     document.getElementById("status").innerText = stages[stage].text;
@@ -802,7 +1499,7 @@ HTML
       const star = document.createElement("div");
       star.className = "star-particle";
       star.innerText = icons[Math.floor(Math.random() * icons.length)];
-      
+
       const angle = Math.random() * 2 * Math.PI;
       const distance = 70 + Math.random() * 130;
       star.style.setProperty('--dx', Math.cos(angle) * distance + "px");
@@ -826,12 +1523,12 @@ HTML
   }
 
   function resetGame() {
+    batalkanAnimasi();
     stage = 0;
     rintanganAktif = null;
     document.getElementById("hazard-overlay").style.display = "none";
     document.getElementById("btn-hazard").style.display = "none";
-    document.getElementById("btn-water").disabled = false;
-    document.getElementById("btn-sun").disabled = false;
+    kunciTombol(false);
     playTone(330, 0.18);
     updateDisplay();
   }
