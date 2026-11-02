@@ -1,118 +1,389 @@
+HTML
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kebun Kecil Ceria</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Kebun Ceria PAUD</title>
   <style>
+    * {
+      box-sizing: border-box;
+      touch-action: manipulation;
+    }
     body {
-      font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+      font-family: 'Comic Sans MS', 'Chalkboard SE', -apple-system, sans-serif;
       text-align: center;
       background: #e8f5e9;
       margin: 0;
-      padding: 20px;
+      padding: 16px;
       user-select: none;
+      -webkit-user-select: none;
+      overflow-x: hidden;
     }
-    .box {
+    .card {
       max-width: 420px;
       margin: 0 auto;
-      background: white;
-      border-radius: 24px;
-      padding: 24px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      background: #ffffff;
+      border-radius: 28px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      border: 3px solid #c8e6c9;
+      position: relative;
+      overflow: hidden;
+    }
+    h2 {
+      margin: 0 0 12px 0;
+      color: #2e7d32;
+      font-size: 24px;
+    }
+    /* Menu Pemilihan Tanaman */
+    .plant-selector {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 14px;
+    }
+    .btn-select {
+      flex: 1;
+      padding: 8px 4px;
+      font-size: 14px;
+      font-weight: bold;
+      border-radius: 14px;
+      border: 2px solid #a5d6a7;
+      background: #f1f8e9;
+      color: #2e7d32;
+      cursor: pointer;
+      box-shadow: none;
+    }
+    .btn-select.active {
+      background: #4caf50;
+      color: white;
+      border-color: #388e3c;
+      box-shadow: 0 3px 0 #2e7d32;
+    }
+    /* Progress Bar */
+    .progress-container {
+      background: #e0e0e0;
+      border-radius: 20px;
+      height: 12px;
+      width: 100%;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: #66bb6a;
+      transition: width 0.35s ease;
+    }
+    /* Area Tanaman & Hama */
+    .plant-area {
+      min-height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      margin: 10px 0;
     }
     #stage-icon {
-      font-size: 90px;
-      margin: 20px 0;
-      min-height: 110px;
-      transition: transform 0.3s ease;
+      font-size: 96px;
+      transition: transform 0.25s ease;
     }
-    .status-text {
-      font-size: 20px;
+    #hazard-overlay {
+      position: absolute;
+      right: 25%;
+      bottom: 10px;
+      font-size: 45px;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+      animation: wriggle 0.6s infinite alternate ease-in-out;
+      display: none;
+    }
+    @keyframes wriggle {
+      0% { transform: translateY(0) rotate(-6deg); }
+      100% { transform: translateY(-6px) rotate(6deg); }
+    }
+    .bounce {
+      animation: bounce 0.4s ease;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.22) translateY(-8px); }
+    }
+    .instruction-text {
+      font-size: 17px;
       font-weight: bold;
-      color: #2e7d32;
-      min-height: 55px;
+      color: #388e3c;
+      min-height: 52px;
+      line-height: 1.4;
+      margin-bottom: 14px;
     }
-    .btn-container {
-      display: flex;
+    /* Tombol Aksi */
+    .action-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 12px;
-      justify-content: center;
-      margin-top: 15px;
     }
     button {
-      flex: 1;
-      font-size: 18px;
-      font-weight: bold;
-      padding: 14px 10px;
       border: none;
-      border-radius: 16px;
+      border-radius: 20px;
+      padding: 15px 10px;
+      font-size: 17px;
+      font-weight: bold;
       cursor: pointer;
       color: white;
-      box-shadow: 0 5px 0 rgba(0,0,0,0.15);
-      transition: 0.1s;
+      transition: transform 0.08s, box-shadow 0.08s, opacity 0.2s;
+      box-shadow: 0 5px 0 rgba(0,0,0,0.12);
     }
     button:active {
-      transform: translateY(3px);
-      box-shadow: 0 2px 0 rgba(0,0,0,0.15);
+      transform: translateY(4px);
+      box-shadow: 0 1px 0 rgba(0,0,0,0.12);
     }
-    .btn-water { background: #42a5f5; }
-    .btn-sun { background: #ffa726; }
-    .btn-reset {
-      margin-top: 20px;
-      background: #78909c;
+    button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: 0 5px 0 rgba(0,0,0,0.1) !important;
+    }
+    .btn-water { background: #42a5f5; box-shadow: 0 5px 0 #1e88e5; }
+    .btn-sun { background: #ffa726; box-shadow: 0 5px 0 #f57c00; }
+    
+    /* Tombol Khusus Rintangan */
+    #btn-hazard {
+      display: none;
       width: 100%;
-      padding: 10px;
+      background: #e91e63;
+      box-shadow: 0 5px 0 #ad1457;
+      margin-bottom: 12px;
+      font-size: 18px;
+      animation: pulse-red 1s infinite alternate;
+    }
+    @keyframes pulse-red {
+      0% { transform: scale(0.98); }
+      100% { transform: scale(1.02); }
+    }
+
+    .btn-reset {
+      margin-top: 14px;
+      background: #90a4ae;
+      box-shadow: 0 4px 0 #78909c;
+      width: 100%;
+      padding: 11px;
       font-size: 15px;
+    }
+    /* Partikel Kembang Api */
+    .star-particle {
+      position: absolute;
+      pointer-events: none;
+      font-size: 24px;
+      animation: explode 1.2s forwards ease-out;
+      z-index: 10;
+    }
+    @keyframes explode {
+      0% { opacity: 1; transform: translate(0, 0) scale(0.5); }
+      100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(1.4) rotate(var(--rot)); }
     }
   </style>
 </head>
 <body>
 
-<div class="box">
-  <h2 style="color: #1b5e20; margin: 0;">🌱 Kebunku</h2>
-  
-  <div id="stage-icon">🟫</div>
-  <div id="status" class="status-text">Biji masih tertanam di tanah. Ayo beri air!</div>
+<div class="card" id="game-card">
+  <h2>🌱 Kebunku Ceria</h2>
 
-  <div class="btn-container">
-    <button class="btn-water" onclick="beriKebutuhan('air')">💧 Siram Air</button>
-    <button class="btn-sun" onclick="beriKebutuhan('matahari')">☀️ Sinar Surya</button>
+  <div class="plant-selector">
+    <button class="btn-select active" onclick="pilihTanaman('semangka', this)">🍉 Semangka</button>
+    <button class="btn-select" onclick="pilihTanaman('stroberi', this)">🍓 Stroberi</button>
+    <button class="btn-select" onclick="pilihTanaman('jagung', this)">🌽 Jagung</button>
+  </div>
+  
+  <div class="progress-container">
+    <div id="prog-bar" class="progress-bar"></div>
+  </div>
+
+  <div class="plant-area">
+    <div id="stage-icon">🟫</div>
+    <div id="hazard-overlay">🐛</div>
+  </div>
+  
+  <div id="status" class="instruction-text">Biji tertanam di tanah. Beri air dulu yuk! 💧</div>
+
+  <!-- Tombol Selesaikan Rintangan -->
+  <button id="btn-hazard" onclick="selesaikanRintangan()">🌿 Cabut Rumput Liar</button>
+
+  <div class="action-grid">
+    <button id="btn-water" class="btn-water" onclick="beriKebutuhan('air')">💧 Air</button>
+    <button id="btn-sun" class="btn-sun" onclick="beriKebutuhan('matahari')">☀️ Matahari</button>
   </div>
 
   <button class="btn-reset" onclick="resetGame()">🔄 Tanam Biji Baru</button>
 </div>
 
 <script>
+  const DATA_TANAMAN = {
+    semangka: { nama: "Semangka", panenIcon: "🍉", pesanPanen: "Horeee! Semangka manis sudah panen! 🎉" },
+    stroberi: { nama: "Stroberi", panenIcon: "🍓", pesanPanen: "Yaaay! Stroberi merah ranum siap dipetik! 🍓✨" },
+    jagung: { nama: "Jagung", panenIcon: "🌽", pesanPanen: "Wah hebat! Jagung manis kuning tumbuh subur! 🌽🍿" }
+  };
+
+  let tanamanDipilih = "semangka";
   let stage = 0;
-  const stages = [
-    { icon: "🟫", text: "Biji masih di dalam tanah. Beri air dulu yuk! 💧", need: "air" },
-    { icon: "🌱", text: "Wah, tunas kecil mulai keluar! Butuh sinar matahari hangat ☀️", need: "matahari" },
-    { icon: "🌿", text: "Daunnya makin banyak! Haus lagi, beri minum ya 💧", need: "air" },
-    { icon: "🌼", text: "Keren, bunganya mekar! Hangatkan lagi dengan matahari ☀️", need: "matahari" },
-    { icon: "🍉", text: "Horeee! Buah semangka sudah matang dan manis! 🎉", need: "selesai" }
-  ];
+  let rintanganAktif = null; // 'rumput' atau 'ulat'
+
+  function buatTahapan(key) {
+    const data = DATA_TANAMAN[key];
+    return [
+      { icon: "🟫", text: `Biji ${data.nama} tertanam di tanah. Beri air dulu yuk! 💧`, need: "air", hazard: null },
+      { icon: "🌱", text: "Wah, tunas kecil mulai keluar! Butuh sinar surya hangat ☀️", need: "matahari", hazard: "rumput" },
+      { icon: "🌿", text: "Daun makin lebat! Pohon haus, ayo siram 💧", need: "air", hazard: "ulat" },
+      { icon: "🌼", text: "Bunganya mekar harum! Hangatkan dengan surya ☀️", need: "matahari", hazard: null },
+      { icon: data.panenIcon, text: data.pesanPanen, need: "selesai", hazard: null }
+    ];
+  }
+
+  let stages = buatTahapan(tanamanDipilih);
+
+  // Audio Sintetis
+  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  function playTone(freq, duration, type = "triangle") {
+    try {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + duration);
+    } catch(e) {}
+  }
+
+  function pilihTanaman(key, btn) {
+    tanamanDipilih = key;
+    document.querySelectorAll('.btn-select').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    stages = buatTahapan(key);
+    resetGame();
+  }
 
   function beriKebutuhan(jenis) {
-    if (stage >= stages.length - 1) return;
-    
+    if (stage >= stages.length - 1 || rintanganAktif) return;
+
     if (jenis === stages[stage].need) {
       stage++;
-      const el = document.getElementById("stage-icon");
-      el.style.transform = "scale(1.2)";
-      setTimeout(() => el.style.transform = "scale(1)", 250);
+      playTone(450 + (stage * 85), 0.22);
+      
+      const iconEl = document.getElementById("stage-icon");
+      iconEl.classList.remove("bounce");
+      void iconEl.offsetWidth;
+      iconEl.classList.add("bounce");
+
+      // Cek apakah stage baru memiliki rintangan
+      if (stages[stage].hazard) {
+        pasangRintangan(stages[stage].hazard);
+      }
+
+      if (stage === stages.length - 1) {
+        setTimeout(() => playTone(523.25, 0.15), 50);
+        setTimeout(() => playTone(659.25, 0.15), 200);
+        setTimeout(() => playTone(783.99, 0.2), 350);
+        setTimeout(() => playTone(1046.50, 0.4), 500);
+        ledakanBintang();
+      }
       updateDisplay();
     } else {
-      alert("Ups! Tanaman belum butuh itu. Coba tombol yang satu lagi ya! 😊");
+      playTone(220, 0.2, "sawtooth");
+      alert("Ups! Tanaman belum butuh itu. Coba tombol yang satunya ya! 😊");
+    }
+  }
+
+  function pasangRintangan(jenis) {
+    rintanganAktif = jenis;
+    const btnHazard = document.getElementById("btn-hazard");
+    const overlay = document.getElementById("hazard-overlay");
+    const btnWater = document.getElementById("btn-water");
+    const btnSun = document.getElementById("btn-sun");
+
+    btnWater.disabled = true;
+    btnSun.disabled = true;
+
+    if (jenis === "rumput") {
+      overlay.innerText = "🌾";
+      overlay.style.display = "block";
+      btnHazard.innerText = "🌾 Cabut Rumput Liar!";
+      btnHazard.style.display = "block";
+      document.getElementById("status").innerText = "Ada rumput liar mengganggu! Cabut rumputnya dulu yuk!";
+    } else if (jenis === "ulat") {
+      overlay.innerText = "🐛";
+      overlay.style.display = "block";
+      btnHazard.innerText = "🐛 Usir Ulat Daun!";
+      btnHazard.style.display = "block";
+      document.getElementById("status").innerText = "Awas ada ulat pemakan daun! Usir ulatnya dulu yuk!";
+    }
+    playTone(280, 0.25, "sawtooth");
+  }
+
+  function selesaikanRintangan() {
+    if (!rintanganAktif) return;
+    
+    // Nada ceria saat membersihkan rintangan
+    playTone(600, 0.15);
+    setTimeout(() => playTone(800, 0.2), 120);
+
+    const overlay = document.getElementById("hazard-overlay");
+    overlay.style.display = "none";
+    document.getElementById("btn-hazard").style.display = "none";
+
+    document.getElementById("btn-water").disabled = false;
+    document.getElementById("btn-sun").disabled = false;
+
+    rintanganAktif = null;
+    document.getElementById("status").innerText = stages[stage].text;
+  }
+
+  function ledakanBintang() {
+    const card = document.getElementById("game-card");
+    const icons = ["⭐", "✨", "🌟", "🎉", "🍉", "🍓", "🌽"];
+    for (let i = 0; i < 24; i++) {
+      const star = document.createElement("div");
+      star.className = "star-particle";
+      star.innerText = icons[Math.floor(Math.random() * icons.length)];
+      
+      const angle = Math.random() * 2 * Math.PI;
+      const distance = 80 + Math.random() * 140;
+      const dx = Math.cos(angle) * distance + "px";
+      const dy = Math.sin(angle) * distance + "px";
+      const rot = (Math.random() * 360) + "deg";
+
+      star.style.setProperty('--dx', dx);
+      star.style.setProperty('--dy', dy);
+      star.style.setProperty('--rot', rot);
+      star.style.left = "50%";
+      star.style.top = "45%";
+
+      card.appendChild(star);
+      setTimeout(() => star.remove(), 1200);
     }
   }
 
   function updateDisplay() {
     document.getElementById("stage-icon").innerText = stages[stage].icon;
-    document.getElementById("status").innerText = stages[stage].text;
+    if (!rintanganAktif) {
+      document.getElementById("status").innerText = stages[stage].text;
+    }
+    const persentase = (stage / (stages.length - 1)) * 100;
+    document.getElementById("prog-bar").style.width = persentase + "%";
   }
 
   function resetGame() {
     stage = 0;
+    rintanganAktif = null;
+    document.getElementById("hazard-overlay").style.display = "none";
+    document.getElementById("btn-hazard").style.display = "none";
+    document.getElementById("btn-water").disabled = false;
+    document.getElementById("btn-sun").disabled = false;
+    playTone(330, 0.18);
     updateDisplay();
   }
 </script>
